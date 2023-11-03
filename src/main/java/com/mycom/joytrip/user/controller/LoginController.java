@@ -30,7 +30,7 @@ public class LoginController {
 
 		if (user == null) {
 			System.out.println("로그인 실패");
-			return "login";
+			return "redirect:/home.html";
 		}
 		session.setAttribute("userDto", user);
 		session.setAttribute("login", "success");
