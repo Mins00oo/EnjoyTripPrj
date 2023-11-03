@@ -40,8 +40,12 @@
 		    s.content_id = #{contentId};
 	</select>
 	
-	<delete id="deleteStar" parameterType="int">
-		delete from star where content_id = #{contentId}
+	<delete id="deleteStar" parameterType="map">
+		delete from star
+		where 
+			user_id = #{userId} 
+			and 
+			content_id = #{contentId}
 	</delete>
 	
 	<select id="retriveMyStar" parameterType="int" resultType="com.mycom.joytrip.star.dto.StarResponseDto">

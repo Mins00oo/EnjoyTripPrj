@@ -5,7 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mycom.joytrip.review.dao.ReviewDao;
+import com.mycom.joytrip.review.dto.ReviewResponseDto;
 import com.mycom.joytrip.tour.dao.TourDao;
+import com.mycom.joytrip.tour.dto.TourDetailResponseDto;
 import com.mycom.joytrip.tour.dto.TourResponseDto;
 
 @Service
@@ -13,6 +16,9 @@ public class TourServiceImpl implements TourService {
 	
 	@Autowired
 	TourDao tourDao;
+	
+	@Autowired
+	ReviewDao reviewDao;
 
 	@Override
 	public List<TourResponseDto> searchTourbyWord(String searchWord) {
@@ -32,6 +38,14 @@ public class TourServiceImpl implements TourService {
 	@Override
 	public List<TourResponseDto> searchTourbyWordAndOrder(String searchWord, String order) {
 		return tourDao.searchTourbyWordAndOrder(searchWord, order);
+	}
+
+	@Override
+	public TourDetailResponseDto tourDetail(int contentId) {
+		TourDetailResponseDto tourDetail = tourDao.tourDetail(contentId);
+		List<ReviewResponseDto> reviewResponseDtos = reviewDao.retriveContentReviewList(contentId);
+		tourDetail.setReviewResponseDtos(reviewResponseDtos);
+		return tourDetail;
 	}
 	
 	

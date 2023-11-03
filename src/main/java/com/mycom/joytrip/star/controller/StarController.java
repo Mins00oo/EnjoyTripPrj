@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mycom.joytrip.star.dto.StarRequestDto;
 import com.mycom.joytrip.star.dto.StarResponseDto;
 import com.mycom.joytrip.star.service.StarService;
-import com.mycom.joytrip.user.dto.UserDto;
 
 @RestController
 @ControllerAdvice
@@ -49,6 +49,12 @@ public class StarController {
 	public ResponseEntity<Object> retrieveTourDetail(@PathVariable int contentId) {
 		StarResponseDto starResponseDto = starService.retrieveStar(contentId);
 		return ResponseEntity.status(200).body(starResponseDto);
+	}
+	
+	@DeleteMapping("/tours/stars/{contentId}")
+	public ResponseEntity<Object> deleteTourDetail(@PathVariable int contentId, HttpSession session) {
+		starService.deleteStar(1, contentId);
+		return ResponseEntity.status(200).body("즐겨찾기 삭제가 완료되었습니다.");
 	}
 	
 

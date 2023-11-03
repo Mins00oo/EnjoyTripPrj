@@ -1,5 +1,9 @@
 package com.mycom.joytrip.tour.dto;
 
+import java.util.List;
+
+import com.mycom.joytrip.review.dto.ReviewResponseDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +13,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TourResponseDto {
+public class TourDetailResponseDto {
 	private int contentId;
 	
 	private String title;
@@ -33,4 +37,6 @@ public class TourResponseDto {
 	private double longtitude;
 	
 	private double avgScore;
+	
+	List<ReviewResponseDto> reviewResponseDtos;
 }

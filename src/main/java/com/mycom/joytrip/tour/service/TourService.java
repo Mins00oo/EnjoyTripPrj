@@ -2,6 +2,7 @@ package com.mycom.joytrip.tour.service;
 
 import java.util.List;
 
+import com.mycom.joytrip.tour.dto.TourDetailResponseDto;
 import com.mycom.joytrip.tour.dto.TourResponseDto;
 
 public interface TourService {
@@ -12,4 +13,6 @@ public interface TourService {
 	List<TourResponseDto> orderTourList(String order);
 	
 	List<TourResponseDto> tourList();
+	
+	TourDetailResponseDto tourDetail(int contentId);
 }
