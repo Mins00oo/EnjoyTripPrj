@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class StarResponseDto {
 	private int userId;
-	
+	  
 	private int contentId;
 	
 	private String title;
