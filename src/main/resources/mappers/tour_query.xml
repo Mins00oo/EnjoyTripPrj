@@ -106,8 +106,6 @@
 		HAVING
 			a.content_id = #{contentId};
 	</select>
-
-
 </mapper>
 
 

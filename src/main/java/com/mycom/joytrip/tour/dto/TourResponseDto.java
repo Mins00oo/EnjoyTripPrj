@@ -31,6 +31,7 @@ public class TourResponseDto {
 	private double latitude;
 	
 	private double longtitude;
-	
+
 	private double avgScore;
+
 }

@@ -2,27 +2,29 @@
 	
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mycom.joytrip.board.dao.BoardDao">
-	<select id="detail" parameterType="int" resultType="com.mycom.joytrip.board.dto.BoardDto">
-		select board_id, board_title, user_id, board_date, board_content
-		  from board 
-		 where board_id = #{boardId}
+
+	<select id="detail" parameterType="int" resultType="com.mycom.joytrip.board.dto.BoardResponseDto">
+		select u.user_id, u.user_nickname, b.board_id, b.board_title, b.board_date, b.board_content
+		  from user u, board b
+		 where u.user_id = b.user_id and board_id = #{boardId}
 	</select>
 	
-	<select id="list" resultType="com.mycom.joytrip.board.dto.BoardDto">
-		select board_id, board_title, user_id, board_date, board_content
-		  from board
+	<select id="list" resultType="com.mycom.joytrip.board.dto.BoardResponseDto">
+		select u.user_id, u.user_nickname, b.board_id, b.board_title, b.board_date, b.board_content
+		  from user u, board b
+		 where u.user_id = b.user_id
 	</select>
 	
-	<insert id="insert" parameterType="com.mycom.joytrip.board.dto.BoardDto">
-		insert into board (board_title, user_id, board_date, board_content)
-   		values (#{boardTitle}, #{userId}, #{boardDate}, #{boardContent})
+	<insert id="insert" parameterType="com.mycom.joytrip.board.dto.BoardRequestDto">
+		insert into board (
+		board_title, user_id, board_date, board_content)
+   		values (#{boardTitle}, #{userId}, now(), #{boardContent})
 	</insert>
 	
-	<update id="update" parameterType="com.mycom.joytrip.board.dto.BoardDto">
+	<update id="update" parameterType="com.mycom.joytrip.board.dto.BoardRequestDto">
 		update board
 		   set board_title 	= #{boardTitle}
-		   	  ,user_id		= #{userId}
-		   	  ,board_date		= #{boardDate}
+		   	  ,board_date		= now()
 		   	  ,board_content	= #{boardContent}
 		 where board_id 	= #{boardId}
 	</update>

@@ -19,6 +19,7 @@ public class StarServiceImpl implements StarService {
 	@Override
 	public int registStar(StarRequestDto starDto) {
 		if (starDao.retriveMyStar(starDto.getUserId(), starDto.getContentId()) != null) {
+			System.out.println("즐찾 실패" + starDto.toString());
 			throw new CustomInsertException("이미 즐겨찾기한 관광지입니다!");
 		}
 		return starDao.registStar(starDto);

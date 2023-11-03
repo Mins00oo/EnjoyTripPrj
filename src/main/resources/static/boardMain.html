@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>Board 관리</h1>
+	<hr />
+	<table>
+		<thead>
+			<tr>
+				<td>Board ID</td>
+				<td>제목</td>
+				<td>작성자</td>
+				<td>작성일</td>
+			</tr>
+		</thead>
+		<tbody id="tbodyBoard"></tbody>
+	</table>
+
+	<hr />
+	<form>
+		<table>
+			<tbody>
+				<tr>
+					<td>제목</td>
+					<td><input type="text" name="boardTitle" id="inputBoardTitle" /></td>
+				</tr>
+				<tr>
+					<td>내용</td>
+					<td><input type="text" name="boardContent"
+						id="inputBoardContent" /></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+	<div style="border: 1px; margin: auto; text-align: center">
+		<button id="btnInsert">등록</button>
+		<button id="btnUpdate">수정</button>
+		<button id="btnDelete">삭제</button>
+		<button id="btnClear">초기화</button>
+	</div>
+	<script>
+      //현재 조회되고 있는 board의 key
+      var CURRENT_BOARD_ID;
+      var CURRENT_USER_ID;
+
+      window.onload = function () {
+        listBoard();
+        //button event handler
+        document.querySelector("#btnInsert").onclick = inputBoard;
+        document.querySelector("#btnUpdate").onclick = updateBoard;
+        document.querySelector("#btnDelete").onclick = deleteBoard;
+        document.querySelector("#btnClear").onclick = clear;
+      };
+
+      async function listBoard() {
+        try {
+          let response = await fetch("/boards");
+          let data = await response.json();
+
+          console.log(data);
+          makeListHtml(data);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      function makeListHtml(list) {
+        let listHtml = ``;
+        list.forEach((el) => {
+          listHtml += `<tr style="cursor:pointer;" data-boardId=${el.boardId}><td>${el.boardId}</td><td>${el.boardTitle}</td><td>${el.userNickname}</td><td>${el.boardDate}</td></tr>`;
+        });
+
+        document.querySelector("#tbodyBoard").innerHTML = listHtml;
+        makeListHtmlEventHandler();
+      }
+
+      function makeListHtmlEventHandler() {
+        document.querySelectorAll("#tbodyBoard tr").forEach((el) => {
+          el.onclick = function () {
+            let boardId = this.getAttribute("data-boardId");
+            detailBoard(boardId);
+          };
+        });
+      }
+
+      async function detailBoard(boardId) {
+        let url = `/boards/${boardId}`;
+        try {
+          let response = await fetch(url);
+          let data = await response.json();
+
+          console.log(data);
+          makeDetailHtml(data);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      function makeDetailHtml(detail) {
+        CURRENT_BOARD_ID = detail.boardId;
+        CURRENT_USER_ID = detail.userId;
+        document.querySelector("#inputBoardTitle").value = detail.boardTitle;
+        document.querySelector("#inputBoardContent").value = detail.boardContent;
+      }
+
+      //db 다녀오므로 async
+      //time은 db단에서 처리.
+      async function inputBoard() {
+        let board = {
+          userId: CURRENT_USER_ID,  
+          boardTitle: document.querySelector("#inputBoardTitle").value,
+          boardContent: document.querySelector("#inputBoardContent").value,
+        };
+
+        let urlParams = new URLSearchParams(board); //www-urlencoded
+        let fetchOptions = {
+          method: "POST",
+          body: urlParams,
+        };
+
+        try {
+          let response = await fetch("/boards", fetchOptions);
+          let data = await response.json();
+
+          console.log(data);
+          listBoard();
+          clear();
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      async function updateBoard() {
+        let board = {
+          userId: CURRENT_USER_ID,
+          boardId: CURRENT_BOARD_ID,
+          boardTitle: document.querySelector("#inputBoardTitle").value,
+          boardContent: document.querySelector("#inputBoardContent").value,
+        };
+
+        let urlParams = new URLSearchParams(board); //www-urlencoded
+        let fetchOptions = {
+          method: "PUT",
+          body: urlParams,
+        };
+
+        let url = `/boards/${CURRENT_BOARD_ID}`;
+
+        try {
+          let response = await fetch(url, fetchOptions);
+          let data = await response.json();
+
+          console.log(data);
+          listBoard();
+          clear();
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      async function deleteBoard() {
+        let fetchOptions = {
+          method: "Delete",
+        };
+
+        let url = `/boards/${CURRENT_BOARD_ID}`;
+
+        try {
+          let response = await fetch(url, fetchOptions);
+          let data = await response.json();
+
+          console.log(data);
+          listBoard();
+          clear();
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      function clear() {
+    	document.querySelector("#inputBoardTitle").value = "";
+        document.querySelector("#inputBoardContent").value = "";
+      }
+    </script>
+</body>
+</html>

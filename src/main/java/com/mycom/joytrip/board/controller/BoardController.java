@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mycom.joytrip.board.dto.BoardDto;
+import com.mycom.joytrip.board.dto.BoardRequestDto;
+import com.mycom.joytrip.board.dto.BoardResponseDto;
 import com.mycom.joytrip.board.service.BoardService;
 
 @RestController
@@ -19,25 +20,24 @@ public class BoardController {
 	BoardService boardService;
 	
 	@GetMapping(value="/boards")
-	public List<BoardDto> list(){
-		List<BoardDto> list = boardService.list();
+	public List<BoardResponseDto> list(){
+		List<BoardResponseDto> list = boardService.list();
 		return list;
 	}
 	
 	@GetMapping(value="/boards/{boardId}")
-	//HttpSession session으로 어케 처리 해볼지 생각
-	public BoardDto detail(@PathVariable int boardId){
-		BoardDto dto = boardService.detail(boardId);
+	public BoardResponseDto detail(@PathVariable int boardId){
+		BoardResponseDto dto = boardService.detail(boardId);
 		return dto;
 	}
 	
 	@PostMapping(value="/boards")
-	public int insert(BoardDto dto){
+	public int insert(BoardRequestDto dto){
 		return boardService.insert(dto);
 	}
 	
 	@PutMapping(value="/boards/{boardId}")
-	public int update(@PathVariable int boardId, BoardDto dto){
+	public int update(@PathVariable int boardId, BoardRequestDto dto){
 		return boardService.update(dto);
 	}
 	
