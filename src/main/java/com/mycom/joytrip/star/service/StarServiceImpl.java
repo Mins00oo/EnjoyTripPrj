@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mycom.joytrip.common.exception.CustomInsertException;
 import com.mycom.joytrip.star.dao.StarDao;
 import com.mycom.joytrip.star.dto.StarRequestDto;
 import com.mycom.joytrip.star.dto.StarResponseDto;
@@ -17,8 +18,11 @@ public class StarServiceImpl implements StarService {
 
 	@Override
 	public int registStar(StarRequestDto starDto) {
-		if (starDao.retrieveStar(starDto.getContentId()) != null) {
-			
+		StarResponseDto myStar = starDao.retriveMyStar(starDto.getUserId(), starDto.getContentId());
+		System.out.println(myStar);
+		if (starDao.retriveMyStar(starDto.getUserId(), starDto.getContentId()) != null) {
+			System.out.println("즐찾 실패" + starDto.toString());
+			throw new CustomInsertException("이미 즐겨찾기한 관광지입니다!");
 		}
 		return starDao.registStar(starDto);
 	}

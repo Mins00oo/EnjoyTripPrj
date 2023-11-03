@@ -3,6 +3,7 @@ package com.mycom.joytrip.star.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.mycom.joytrip.star.dto.StarRequestDto;
 import com.mycom.joytrip.star.dto.StarResponseDto;
@@ -17,5 +18,5 @@ public interface StarDao {
 	
 	int deleteStar(int contentId);
 	
-	StarResponseDto retriveMyStar(int userId, int contentId);
+	StarResponseDto retriveMyStar(@Param("userId") int userId, @Param("contentId") int contentId);
 }
