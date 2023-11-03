@@ -58,7 +58,7 @@
 		        INNER JOIN
 		    attraction_info ai ON s.content_id = ai.content_id
 		WHERE
-		    user_id = #{userId};
+		    s.user_id = #{userId} and s.content_id = #{contentId}
 	</select>
 </mapper>
 

@@ -32,11 +32,8 @@ public class StarController {
 		Map<String, String> map = new HashMap<>();
 //		UserDto userDto = (UserDto) session.getAttribute("userDto");
 //		starDto.setUserId(userDto.getUserId());
-		try {
-			starService.registStar(starDto);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		System.out.println(starDto);
+		starService.registStar(starDto);
 		
 		return ResponseEntity.status(200).body("즐겨찾기 등록이 완료되었습니다");
 	}

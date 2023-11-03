@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mycom.joytrip.tour.dao.TourDao">
+	<select id="searchTourbyWord" parameterType="String" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
+		SELECT 
+			content_id,
+		    title,
+		    addr1,
+		    zipcode,
+		    first_image,
+		    first_image2,
+		    readcount,
+		    sido_code,
+		    gugun_code,
+		    latitude,
+		    longitude
+		FROM
+		    attraction_info a
+		WHERE
+		    a.title LIKE CONCAT('%', #{searchWord}, '%') or a.addr1 LIKE CONCAT('%', #{searchWord}, '%')
+	</select>
+	
+	<select id="searchTourbyWordAndOrder" parameterType="map" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
+		SELECT 
+			content_id,
+		    title,
+		    addr1,
+		    zipcode,
+		    first_image,
+		    first_image2,
+		    readcount,
+		    sido_code,
+		    gugun_code,
+		    latitude,
+		    longitude
+		FROM
+		    attraction_info a
+		WHERE
+		    a.title LIKE CONCAT('%', #{searchWord}, '%') or a.addr1 LIKE CONCAT('%', #{searchWord}, '%')
+		ORDER BY 
+			readcount ${order}
+	</select>
+	
+	<select id="orderTourList" parameterType="String" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
+		SELECT 
+			content_id,
+		    title,
+		    addr1,
+		    zipcode,
+		    first_image,
+		    first_image2,
+		    readcount,
+		    sido_code,
+		    gugun_code,
+		    latitude,
+		    longitude
+		FROM
+		    attraction_info a
+		ORDER BY readcount ${order}
+	</select>
+	
+	<select id="tourList" parameterType="String" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
+		SELECT 
+			content_id,
+		    title,
+		    addr1,
+		    zipcode,
+		    first_image,
+		    first_image2,
+		    readcount,
+		    sido_code,
+		    gugun_code,
+		    latitude,
+		    longitude
+		FROM
+		    attraction_info a
+	</select>
+
+</mapper>
+
+
+
+
+
