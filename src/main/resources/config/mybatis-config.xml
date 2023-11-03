@@ -9,5 +9,6 @@
     <mappers>
     	<mapper resource="mappers/user_query.xml"/>
     	<mapper resource="mappers/board_query.xml"/>
+    	<mapper resource="mappers/star_query.xml"/>
     </mappers>
 </configuration>

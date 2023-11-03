@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Insert title here</title>
+  </head>
+  <body>
+    <h1>User 관리</h1>
+    <hr />
+    <table>
+      <thead>
+        <tr>
+          <td>User ID</td>
+          <td>이름</td>
+          <td>Email</td>
+          <td>닉네임</td>
+        </tr>
+      </thead>
+      <tbody id="tbodyUser"></tbody>
+    </table>
+
+    <hr />
+    <form>
+      <table>
+        <tbody>
+          <tr>
+            <td>userPassword</td>
+            <td><input type="text" name="userPassword" id="inputUserPassword" /></td>
+          </tr>
+          <tr>
+            <td>userName</td>
+            <td><input type="text" name="userName" id="inputUserName" /></td>
+          </tr>
+          <tr>
+            <td>Email</td>
+            <td><input type="text" name="userEmail" id="inputUserEmail" /></td>
+          </tr>
+          <tr>
+            <td>userNickname</td>
+            <td><input type="text" name="userNickname" id="inputUserNickname" /></td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+    <div style="border: 1px; margin: auto; text-align: center">
+      <button id="btnInsert">등록</button>
+      <button id="btnUpdate">수정</button>
+      <button id="btnDelete">삭제</button>
+      <button id="btnClear">초기화</button>
+    </div>
+    <script>
+      //현재 조회되고 있는 학생의 KEY
+      var CURRENT_ID;
+
+      window.onload = function () {
+        listUser();
+        //button event handler
+        document.querySelector("#btnInsert").onclick = inputUser;
+        document.querySelector("#btnUpdate").onclick = updateUser;
+        document.querySelector("#btnDelete").onclick = deleteUser;
+        document.querySelector("#btnClear").onclick = clear;
+      };
+
+      async function listUser() {
+        try {
+          let response = await fetch("/users");
+          let data = await response.json();
+
+          console.log(data);
+          makeListHtml(data);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      function makeListHtml(list) {
+        let listHtml = ``;
+        list.forEach((el) => {
+          listHtml += `<tr style="cursor:pointer;" data-userId=${el.userId}><td>${el.userId}</td><td>${el.userName}</td><td>${el.userEmail}</td><td>${el.userNickname}</td></tr>`;
+        });
+
+        document.querySelector("#tbodyUser").innerHTML = listHtml;
+        makeListHtmlEventHandler();
+      }
+
+      function makeListHtmlEventHandler() {
+        document.querySelectorAll("#tbodyUser tr").forEach((el) => {
+          el.onclick = function () {
+            let userId = this.getAttribute("data-userId");
+            detailUser(userId);
+          };
+        });
+      }
+
+      async function detailUser(userId) {
+        let url = `/users/${userId}`;
+        try {
+          let response = await fetch(url);
+          let data = await response.json();
+
+          console.log(data);
+          makeDetailHtml(data);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      function makeDetailHtml(detail) {
+        CURRENT_ID = detail.userId;
+        document.querySelector("#inputUserName").value = detail.userName;
+        document.querySelector("#inputUserEmail").value = detail.userEmail;
+        document.querySelector("#inputUserNickname").value = detail.userNickname;
+      }
+
+      //db 다녀오므로 async
+      async function inputUser() {
+        let user = {
+          userPassword: document.querySelector("#inputUserPassword").value,
+          userName: document.querySelector("#inputUserName").value,
+          userEmail: document.querySelector("#inputUserEmail").value,
+          userNickname: document.querySelector("#inputUserNickname").value,
+        };
+
+        let urlParams = new URLSearchParams(user); //www-urlencoded
+        let fetchOptions = {
+          method: "POST",
+          body: urlParams,
+        };
+
+        try {
+          let response = await fetch("/users", fetchOptions);
+          let data = await response.json();
+
+          console.log(data);
+          listUser();
+          clear();
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      async function updateUser() {
+        let user = {
+          userId: CURRENT_ID,
+          userPassword: document.querySelector("#inputUserPassword").value,
+          userName: document.querySelector("#inputUserName").value,
+          userEmail: document.querySelector("#inputUserEmail").value,
+          userNickname: document.querySelector("#inputUserNickname").value,
+        };
+
+        let urlParams = new URLSearchParams(user); //www-urlencoded
+        let fetchOptions = {
+          method: "PUT",
+          body: urlParams,
+        };
+
+        let url = `/users/${CURRENT_ID}`;
+
+        try {
+          let response = await fetch(url, fetchOptions);
+          let data = await response.json();
+
+          console.log(data);
+          listUser();
+          clear();
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      async function deleteUser() {
+        let fetchOptions = {
+          method: "Delete",
+        };
+
+        let url = `/users/${CURRENT_ID}`;
+
+        try {
+          let response = await fetch(url, fetchOptions);
+          let data = await response.json();
+
+          console.log(data);
+          listUser();
+          clear();
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      function clear() {
+    	document.querySelector("#inputUserPassword").value = "";
+        document.querySelector("#inputUserName").value = "";
+        document.querySelector("#inputUserEmail").value = "";
+        document.querySelector("#inputUserNickname").value = "";
+      }
+    </script>
+  </body>
+</html>
