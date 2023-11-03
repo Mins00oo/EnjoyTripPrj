@@ -9,10 +9,14 @@ import com.mycom.joytrip.user.dao.UserDao;
 import com.mycom.joytrip.user.dto.UserDto;
 
 @Service
-public class UserServiceImpl implements UserService{
-	
+public class UserServiceImpl implements UserService{	
 	@Autowired
 	UserDao userDao;
+	
+	@Override
+	public UserDto userLogin(UserDto userDto) {
+		return userDao.userLogin(userDto);
+	}
 	
 	@Override
 	public List<UserDto> list() {

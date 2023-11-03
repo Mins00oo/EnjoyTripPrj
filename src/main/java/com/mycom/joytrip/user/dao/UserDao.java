@@ -8,6 +8,8 @@ import com.mycom.joytrip.user.dto.UserDto;
 
 @Mapper
 public interface UserDao {
+	UserDto userLogin(UserDto userDto);
+	
 	List<UserDto> list();
 	UserDto detail(int studentId);
 	int insert(UserDto dto);
