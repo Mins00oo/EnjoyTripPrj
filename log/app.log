@@ -4687,3 +4687,17 @@ Caused by: java.lang.ClassNotFoundException: com.google.protobuf.MessageOrBuilde
 2023-11-03 11:12:27.949  INFO 21380 --- [RMI TCP Connection(15)-127.0.0.1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2023-11-03 11:12:27.956  INFO 21380 --- [RMI TCP Connection(15)-127.0.0.1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
 >>>>>>> 2800e183e028ba12f41eef02034e1e10cff61d6d
+2023-11-03 12:16:33.066  INFO 13496 --- [restartedMain] com.mycom.joytrip.EnjoytripApplication   : Starting EnjoytripApplication using Java 1.8.0_192 on DESKTOP-MDJG1NJ with PID 13496 (C:\SSAFY\enjoyTrip\enjoytrip\bin\main started by SSAFY in C:\SSAFY\enjoyTrip\enjoytrip)
+2023-11-03 12:16:33.067  INFO 13496 --- [restartedMain] com.mycom.joytrip.EnjoytripApplication   : No active profile set, falling back to 1 default profile: "default"
+2023-11-03 12:16:33.093  INFO 13496 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-11-03 12:16:33.094  INFO 13496 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-11-03 12:16:33.726  INFO 13496 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2023-11-03 12:16:33.731  INFO 13496 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-11-03 12:16:33.731  INFO 13496 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.82]
+2023-11-03 12:16:33.783  INFO 13496 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-11-03 12:16:33.783  INFO 13496 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 689 ms
+2023-11-03 12:16:34.154  INFO 13496 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2023-11-03 12:16:34.204  INFO 13496 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2023-11-03 12:16:34.211  INFO 13496 --- [restartedMain] com.mycom.joytrip.EnjoytripApplication   : Started EnjoytripApplication in 1.382 seconds (JVM running for 1.958)
+2023-11-03 12:16:35.774  INFO 13496 --- [RMI TCP Connection(2)-127.0.0.1] inMXBeanRegistrar$SpringApplicationAdmin : Application shutdown requested.
+2023-11-03 12:16:35.828  INFO 13496 --- [RMI TCP Connection(2)-127.0.0.1] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
