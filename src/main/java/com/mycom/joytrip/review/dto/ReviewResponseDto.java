@@ -1,4 +1,4 @@
-package com.mycom.joytrip.tour.dto;
+package com.mycom.joytrip.review.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,29 +9,32 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TourResponseDto {
+public class ReviewResponseDto {
+	private int reviewId;
+	
+	private int userId;
+	
+	private String userNickname;
+	
 	private int contentId;
 	
 	private String title;
 	
 	private String addr1;
 	
-	private String zipcode;
-	
 	private String firstImage;
 	
 	private String firstImage2;
 	
-	private int readcount;
-	
-	private int sidoCode;
-	
-	private int gugunCode;
-	
 	private double latitude;
 	
-	private double longtitude;
-
-	private double avgScore;
-
+	private double longitude;
+	
+	private String content;
+	
+	private int score;
+	
+	private String createAt;
+	
+	private String updateAt;
 }

@@ -5,9 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.mycom.joytrip.tour.dto.TourDetailResponseDto;
 import com.mycom.joytrip.tour.dto.TourResponseDto;
 import com.mycom.joytrip.tour.service.TourService;
 
@@ -38,6 +39,12 @@ public class TourController {
 	public ResponseEntity<Object> tourList() {
 		List<TourResponseDto> tourList = tourService.tourList();
 		return ResponseEntity.status(200).body(tourList);
+	}
+
+	@GetMapping("/tours/{contentId}")
+	public ResponseEntity<Object> tourDetail(@PathVariable int contentId) {
+		TourDetailResponseDto tourDetail = tourService.tourDetail(contentId);
+		return ResponseEntity.status(200).body(tourDetail);
 	}
 
 }

@@ -11,5 +11,6 @@
         <mapper resource="mappers/board_query.xml"/>
         <mapper resource="mappers/star_query.xml"/>
         <mapper resource="mappers/tour_query.xml"/>        
+        <mapper resource="mappers/review_query.xml"/>
     </mappers>
 </configuration>

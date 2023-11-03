@@ -5,6 +5,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.mycom.joytrip.tour.dto.TourDetailResponseDto;
+
 import com.mycom.joytrip.tour.dto.TourResponseDto;
 
 @Mapper
@@ -16,4 +18,7 @@ public interface TourDao {
 	List<TourResponseDto> orderTourList(String order);
 	
 	List<TourResponseDto> tourList();
+	
+	TourDetailResponseDto tourDetail(int contentId);
+	
 }
