@@ -14,10 +14,7 @@ public interface StarDao {
 	
 	List<StarResponseDto> retrieveStarList(int userId);
 	
-	StarResponseDto retrieveStar(int contentId);
-	
 	int deleteStar(@Param("userId") int userId, @Param("contentId") int contentId);
-	
+
 	StarResponseDto retriveMyStar(@Param("userId") int userId, @Param("contentId") int contentId);
-	
 }

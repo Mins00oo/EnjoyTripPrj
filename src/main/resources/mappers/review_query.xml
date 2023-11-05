@@ -55,17 +55,59 @@
 		        INNER JOIN
 		    attraction_info a ON r.content_id = a.content_id
 		WHERE
-		    r.content_id = #{contentId};
+		    r.content_id = #{contentId}
 	</select>
 	
-	<delete id="deleteReview" parameterType="map">
+	<delete id="deleteReview" parameterType="int">
 		delete 
 			from review 
 		where 
-			user_id = #{userId} 
-				and
-			content_id = #{contentId} 
+			review_id = #{reviewId}
 	</delete>
+	
+	<select id="retrieveUserCheck" parameterType="map" resultType="com.mycom.joytrip.review.dto.CheckResponseDto">
+		SELECT 
+		    check_id
+		FROM
+		    `check`
+		WHERE
+		    user_id = #{userId} AND content_id = #{contentId}
+	</select>
+	
+	<select id="retrieveUserCheckList" parameterType="int" resultType="com.mycom.joytrip.review.dto.CheckResponseDto">
+		SELECT 
+		    c.check_id,
+		    c.user_id,
+		    c.content_id,
+		    u.user_nickname,
+		    a.title,
+		    a.addr1,
+		    a.zipcode,
+		    a.first_image,
+		    a.first_image2,
+		    a.readcount,
+		    a.sido_code,
+		    a.gugun_code,
+		    a.latitude,
+		    a.longitude
+		FROM
+		    `check` c
+		        INNER JOIN
+		    user u ON c.user_id = u.user_id
+		        INNER JOIN
+		    attraction_info a ON a.content_id = c.content_id
+		WHERE
+		    c.user_id = #{userId}
+	</select>
+	
+	<select id="retriveMyTourReview" parameterType="map" resultType="com.mycom.joytrip.review.dto.ReviewResponseDto">
+		SELECT 
+		    review_id
+		FROM
+		    review
+		WHERE
+		    user_id = #{userId} AND content_id = #{contentId}
+	</select>
 </mapper>
 
 

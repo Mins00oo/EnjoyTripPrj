@@ -10,9 +10,5 @@ public interface StarService {
 	
 	List<StarResponseDto> retrieveStarList(int userId);
 	
-	StarResponseDto retrieveStar(int contentId);
-	
 	int deleteStar(int userId, int contentId);
-
-	StarResponseDto retriveMyStar(int userId, int contentId);
 }

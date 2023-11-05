@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 
 import com.mycom.joytrip.review.dao.ReviewDao;
+import com.mycom.joytrip.review.dto.CheckResponseDto;
 import com.mycom.joytrip.review.dto.ReviewResponseDto;
 import com.mycom.joytrip.tour.dao.TourDao;
 import com.mycom.joytrip.tour.dto.TourDetailResponseDto;
@@ -48,6 +49,11 @@ public class TourServiceImpl implements TourService {
 		List<ReviewResponseDto> reviewResponseDtos = reviewDao.retriveContentReviewList(contentId);
 		tourDetail.setReviewResponseDtos(reviewResponseDtos);
 		return tourDetail;
+	}
+
+	@Override
+	public List<CheckResponseDto> retrieveUserCheckList(int userId) {
+		return reviewDao.retrieveUserCheckList(userId);
 	}
 	
 
