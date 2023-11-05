@@ -38,5 +38,7 @@ public class TourDetailResponseDto {
 	
 	private double avgScore;
 	
+	private boolean favorite;
+	
 	List<ReviewResponseDto> reviewResponseDtos;
 }

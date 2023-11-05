@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.mycom.joytrip.review.dao.ReviewDao;
 import com.mycom.joytrip.review.dto.CheckResponseDto;
 import com.mycom.joytrip.review.dto.ReviewResponseDto;
+import com.mycom.joytrip.star.dao.StarDao;
+import com.mycom.joytrip.star.dto.StarResponseDto;
 import com.mycom.joytrip.tour.dao.TourDao;
 import com.mycom.joytrip.tour.dto.TourDetailResponseDto;
 import com.mycom.joytrip.tour.dto.TourResponseDto;
@@ -21,6 +23,9 @@ public class TourServiceImpl implements TourService {
 
 	@Autowired
 	ReviewDao reviewDao;
+	
+	@Autowired
+	StarDao stardDao;
 
 
 	@Override
@@ -44,10 +49,18 @@ public class TourServiceImpl implements TourService {
 	}
 
 	@Override
-	public TourDetailResponseDto tourDetail(int contentId) {
+	public TourDetailResponseDto tourDetail(int userId, int contentId) {
 		TourDetailResponseDto tourDetail = tourDao.tourDetail(contentId);
+		
 		List<ReviewResponseDto> reviewResponseDtos = reviewDao.retriveContentReviewList(contentId);
 		tourDetail.setReviewResponseDtos(reviewResponseDtos);
+		
+		StarResponseDto isFavorite = stardDao.retriveMyStar(userId, contentId);
+		if (isFavorite == null) {
+			tourDetail.setFavorite(false);
+		} else {
+			tourDetail.setFavorite(true);
+		}
 		return tourDetail;
 	}
 

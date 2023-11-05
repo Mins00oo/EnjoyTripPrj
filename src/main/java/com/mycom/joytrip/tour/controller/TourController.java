@@ -49,8 +49,9 @@ public class TourController {
 	}
 
 	@GetMapping("/tours/{contentId}")
-	public ResponseEntity<Object> tourDetail(@PathVariable int contentId) {
-		TourDetailResponseDto tourDetail = tourService.tourDetail(contentId);
+	public ResponseEntity<Object> tourDetail(@PathVariable int contentId, HttpSession session) {
+//		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		TourDetailResponseDto tourDetail = tourService.tourDetail(1, contentId);
 		return ResponseEntity.status(200).body(tourDetail);
 	}
 	

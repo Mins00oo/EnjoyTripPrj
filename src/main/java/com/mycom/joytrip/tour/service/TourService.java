@@ -16,7 +16,7 @@ public interface TourService {
 	
 	List<TourResponseDto> tourList();
 
-	TourDetailResponseDto tourDetail(int contentId);
+	TourDetailResponseDto tourDetail(int userId, int contentId);
 	
 	List<CheckResponseDto> retrieveUserCheckList(int userId);
 	

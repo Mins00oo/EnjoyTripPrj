@@ -109,6 +109,12 @@
           <td>{{selectedTour.gugunCode}}</td>
           <td>{{selectedTour.latitude}}</td>
           <td>{{selectedTour.averageScore}}</td>
+          <td>
+            <button v-if="!selectedTour.favorite" @click="addToFavorites">
+              즐겨찾기 추가
+            </button>
+            <button v-else @click="deleteFavorites">즐겨찾기 삭제</button>
+          </td>
         </tbody>
       </table>
     </div>
@@ -123,6 +129,7 @@
           const selectedTour = ref(null);
           const searchResults = ref(null);
           const searchWord = ref("");
+          const favorite = ref(null);
 
           // server로부터 data를 받아오는 함수
           const list = async () => {
@@ -146,6 +153,7 @@
               let data = await response.json();
               // 가져온 상세 정보를 selectedTour에 저장
               selectedTour.value = data;
+              favorite.value = data.favorite;
             } catch (error) {
               console.error(error);
             }
@@ -171,6 +179,60 @@
             }
           };
 
+          const addToFavorites = async () => {
+            // 사용자 ID와 콘텐츠 ID를 설정합니다. 여기서는 예시로 'userId'를 '12345'로 지정하였습니다.
+            // 실제로는 사용자의 실제 ID를 가져와서 사용해야 합니다.
+            const userId = 1;
+            const contentId = selectedTour.value.contentId;
+
+            try {
+              let response = await fetch("http://localhost:8080/tours/stars", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ userId, contentId }),
+              });
+
+              if (response.ok) {
+                let result = await response.text();
+                alert(result); // 서버로부터의 응답을 알림으로 표시합니다.
+              } else {
+                throw new Error("Server responded with an error!");
+              }
+            } catch (error) {
+              console.error(error);
+              alert("즐겨찾기 등록에 실패하였습니다.");
+            }
+          };
+
+          const deleteFavorites = async () => {
+            // 사용자 ID와 콘텐츠 ID를 설정합니다. 여기서는 예시로 'userId'를 '12345'로 지정하였습니다.
+            // 실제로는 사용자의 실제 ID를 가져와서 사용해야 합니다.
+
+            try {
+              let response = await fetch(
+                `http://localhost:8080/tours/stars/${selectedTour.value.contentId}`,
+                {
+                  method: "DELETE",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                }
+              );
+
+              if (response.ok) {
+                let result = await response.text();
+                alert(result); // 서버로부터의 응답을 알림으로 표시합니다.
+              } else {
+                throw new Error("Server responded with an error!");
+              }
+            } catch (error) {
+              console.error(error);
+              alert("즐겨찾기 삭제에 실패하였습니다.");
+            }
+          };
+
           list();
 
           return {
@@ -180,6 +242,8 @@
             search,
             searchResults,
             searchWord,
+            addToFavorites,
+            deleteFavorites,
           };
         },
       }).mount("#app");

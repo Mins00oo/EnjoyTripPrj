@@ -6,7 +6,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +20,7 @@ import com.mycom.joytrip.star.service.StarService;
 import com.mycom.joytrip.user.dto.UserDto;
 
 @RestController
-@ControllerAdvice
+@CrossOrigin(originPatterns = "*", allowedHeaders = "*")
 public class StarController {
 	
 	@Autowired
@@ -28,8 +28,8 @@ public class StarController {
 	
 	@PostMapping("/tours/stars")
 	public ResponseEntity<Object> registTourStar(@RequestBody StarRequestDto starDto, HttpSession session) {
-		UserDto userDto = (UserDto) session.getAttribute("userDto");
-		starDto.setUserId(userDto.getUserId());
+//		UserDto userDto = (UserDto) session.getAttribute("userDto");
+//		starDto.setUserId(userDto.getUserId());
 		starService.registStar(starDto);
 		
 		return ResponseEntity.status(200).body("즐겨찾기 등록이 완료되었습니다");
@@ -44,8 +44,8 @@ public class StarController {
 	
 	@DeleteMapping("/tours/stars/{contentId}")
 	public ResponseEntity<Object> deleteMyStar(@PathVariable int contentId, HttpSession session) {
-		UserDto userDto = (UserDto) session.getAttribute("userDto");
-		starService.deleteStar(userDto.getUserId(), contentId);
+//		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		starService.deleteStar(1, contentId);
 		return ResponseEntity.status(200).body("즐겨찾기 삭제가 완료되었습니다.");
 	}
 	
