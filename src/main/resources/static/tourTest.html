@@ -197,6 +197,7 @@
               if (response.ok) {
                 let result = await response.text();
                 alert(result); // 서버로부터의 응답을 알림으로 표시합니다.
+                detail(selectedTour.value.contentId);
               } else {
                 throw new Error("Server responded with an error!");
               }
@@ -224,6 +225,7 @@
               if (response.ok) {
                 let result = await response.text();
                 alert(result); // 서버로부터의 응답을 알림으로 표시합니다.
+                detail(selectedTour.value.contentId);
               } else {
                 throw new Error("Server responded with an error!");
               }
