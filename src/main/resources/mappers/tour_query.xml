@@ -130,7 +130,7 @@
 		    a.readcount, a.sido_code, a.gugun_code, a.latitude, a.longitude
 		ORDER BY
 			average_score desc
-		LIMIT 10000
+		LIMIT 5
 	</select>
 </mapper>
 
