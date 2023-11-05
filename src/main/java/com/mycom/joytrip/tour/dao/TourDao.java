@@ -21,4 +21,6 @@ public interface TourDao {
 	
 	TourDetailResponseDto tourDetail(int contentId);
 	
+	List<TourResponseDto> tourRecommendList();
+	
 }

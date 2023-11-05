@@ -58,5 +58,11 @@ public class TourController {
 		List<CheckResponseDto> userTourList = tourService.retrieveUserCheckList(userDto.getUserId());
 		return ResponseEntity.status(200).body(userTourList);
 	}
+	
+	@GetMapping("/tours/recommends")
+	public ResponseEntity<Object> retriveTourRecommendList() {
+		List<TourResponseDto> recommendList = tourService.tourRecommendList();
+		return ResponseEntity.status(200).body(recommendList);
+	}
 
 }

@@ -55,6 +55,11 @@ public class TourServiceImpl implements TourService {
 	public List<CheckResponseDto> retrieveUserCheckList(int userId) {
 		return reviewDao.retrieveUserCheckList(userId);
 	}
+
+	@Override
+	public List<TourResponseDto> tourRecommendList() {
+		return tourDao.tourRecommendList();
+	}
 	
 
 }
