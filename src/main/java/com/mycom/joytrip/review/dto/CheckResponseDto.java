@@ -12,7 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class CheckResponseDto {
-	private int checkId;
+	private int visitedId;
 	
 	private int userId;
 	

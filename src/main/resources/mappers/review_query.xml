@@ -67,9 +67,9 @@
 	
 	<select id="retrieveUserCheck" parameterType="map" resultType="com.mycom.joytrip.review.dto.CheckResponseDto">
 		SELECT 
-		    check_id
+		    visited_id
 		FROM
-		    `check`
+		   	visited
 		WHERE
 		    user_id = #{userId} AND content_id = #{contentId}
 	</select>
