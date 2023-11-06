@@ -1,20 +1,24 @@
-package com.mycom.joytrip.tour.dto;
-
-import java.util.List;
-
-import com.mycom.joytrip.review.dto.ReviewResponseDto;
+package com.mycom.joytrip.review.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TourDetailResponseDto {
+@ToString
+public class CheckResponseDto {
+	private int checkId;
+	
+	private int userId;
+	
 	private int contentId;
+	
+	private String userNickname;
 	
 	private String title;
 	
@@ -35,10 +39,4 @@ public class TourDetailResponseDto {
 	private double latitude;
 	
 	private double longtitude;
-	
-	private double avgScore;
-	
-	private boolean favorite;
-	
-	List<ReviewResponseDto> reviewResponseDtos;
 }

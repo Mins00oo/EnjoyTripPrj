@@ -23,23 +23,6 @@
 		    user_id = #{userId};
 	</select>
 	
-	<select id="retrieveStar" parameterType="int" resultType="com.mycom.joytrip.star.dto.StarResponseDto">
-		SELECT 
-			user_id,
-		    s.content_id,
-		    ai.title,
-		    ai.addr1,
-		    ai.zipcode,
-		    ai.first_image,
-		    ai.first_image2
-		FROM
-		    star s
-		        INNER JOIN
-		    attraction_info ai ON s.content_id = ai.content_id
-		WHERE
-		    s.content_id = #{contentId};
-	</select>
-	
 	<delete id="deleteStar" parameterType="map">
 		delete from star
 		where 

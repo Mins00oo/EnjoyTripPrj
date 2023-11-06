@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Insert title here</title>
+  </head>
+  <body>
+    <div id="app">
+      <h1>후기 관리</h1>
+      <hr />
+
+      <h2>후기 작성</h2>
+      <form @submit.prevent="submitReview">
+        <label for="contentId">Content ID:</label>
+        <input
+          type="number"
+          id="contentId"
+          v-model="reviewForm.contentId"
+          required
+        />
+
+        <label for="content">후기 내용:</label>
+        <textarea id="content" v-model="reviewForm.content" required></textarea>
+
+        <label for="score">평점:</label>
+        <select id="score" v-model.number="reviewForm.score" required>
+          <option value="" disabled selected>선택하세요</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+
+        <button type="submit">후기 작성</button>
+      </form>
+
+      <table>
+        <thead>
+          <tr>
+            <td>userNickname</td>
+            <td>title</td>
+            <td>addr1</td>
+            <td>firstImage</td>
+            <td>firstImage2</td>
+            <td>content</td>
+            <td>score</td>
+            <td>createAt</td>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr v-for="(review, index) in reviewList" :key="index">
+            <td>{{review.userNickname}}</td>
+            <td>{{review.title}}</td>
+            <td>{{review.addr1}}</td>
+            <td>{{review.firstImage}}</td>
+            <td>{{review.firstImage2}}</td>
+            <td>{{review.content}}</td>
+            <td>{{review.score}}</td>
+            <td>{{review.createAt}}</td>
+            <td>
+              <button @click="deleteReview(review.reviewId)">후기 삭제</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+      const { createApp, ref } = Vue;
+
+      createApp({
+        setup() {
+          const reviewList = ref([]);
+
+          // server로부터 data를 받아오는 함수
+          const list = async () => {
+            try {
+              let response = await fetch("http://localhost:8080/tours/reviews");
+              let data = await response.json();
+              // 가져온 data가 위에서 선언해준 studentList에 넣어주면 된다.
+              reviewList.value = data;
+            } catch (error) {
+              console.error(error);
+            }
+          };
+
+          const deleteReview = async (reviewId) => {
+            // 사용자 ID와 콘텐츠 ID를 설정합니다. 여기서는 예시로 'userId'를 '12345'로 지정하였습니다.
+            // 실제로는 사용자의 실제 ID를 가져와서 사용해야 합니다.
+            try {
+              let response = await fetch(
+                `http://localhost:8080/tours/reviews/${reviewId}`,
+                {
+                  method: "DELETE",
+                }
+              );
+
+              if (response.ok) {
+                let result = await response.text();
+                alert(result); // 서버로부터의 응답을 알림으로 표시합니다.
+
+                list();
+              } else {
+                throw new Error("Server responded with an error!");
+              }
+            } catch (error) {
+              console.error(error);
+              alert("후기 삭제에 실패하였습니다.");
+            }
+          };
+
+          const reviewForm = ref({
+            userId: 1,
+            contentId: null,
+            content: "",
+            score: null,
+          });
+
+          const submitReview = async () => {
+            try {
+              let response = await fetch(
+                "http://localhost:8080/tours/reviews",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(reviewForm.value),
+                }
+              );
+
+              console.log(response);
+
+              if (response.ok) {
+                let result = await response.text();
+                alert(result); // 서버로부터의 응답을 알림으로 표시합니다.
+                reviewForm.value = {
+                  contentId: null,
+                  content: "",
+                  score: null,
+                };
+                // 후기 목록 새로 갱신
+                list();
+              } else {
+                throw new Error("Server responded with an error!");
+              }
+            } catch (error) {
+              console.error(error);
+            }
+          };
+
+          list();
+
+          return {
+            reviewList,
+            deleteReview,
+            reviewForm,
+            submitReview,
+          };
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

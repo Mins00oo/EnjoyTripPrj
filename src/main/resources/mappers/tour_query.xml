@@ -106,6 +106,32 @@
 		HAVING
 			a.content_id = #{contentId};
 	</select>
+	
+	<select id="tourRecommendList" parameterType="String" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
+		SELECT 
+		    a.content_id,
+		    a.title,
+		    a.addr1,
+		    a.zipcode,
+		    a.first_image,
+		    a.first_image2,
+		    a.readcount,
+		    a.sido_code,
+		    a.gugun_code,
+		    a.latitude,
+		    a.longitude,
+		    AVG(r.score) AS average_score -- 평균 점수 계산
+		FROM
+		    attraction_info a 
+		LEFT JOIN 
+		    review r ON a.content_id = r.content_id
+		GROUP BY
+		    a.content_id, a.title, a.addr1, a.zipcode, a.first_image, a.first_image2,
+		    a.readcount, a.sido_code, a.gugun_code, a.latitude, a.longitude
+		ORDER BY
+			average_score desc
+		LIMIT 5
+	</select>
 </mapper>
 
 
