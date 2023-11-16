@@ -65,8 +65,11 @@ public class UserController {
 	}
 	
 	@PutMapping(value="/users/pw")
-	public int changeUserPw(@RequestBody UserDto userDto){
-		return userService.updateUserPw(userDto);
+	public Map<String, String> changeUserPw(@RequestBody UserDto userDto){
+		Map<String, String> map = new HashMap<>();
+		userService.updateUserPw(userDto);
+		map.put("result", "success");
+		return map;
 	}
 	
 	@DeleteMapping(value="/users/{userId}")
