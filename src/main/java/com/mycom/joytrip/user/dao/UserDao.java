@@ -8,11 +8,13 @@ import com.mycom.joytrip.user.dto.UserDto;
 
 @Mapper
 public interface UserDao {
-	UserDto userLogin(UserDto userDto);
+	UserDto userLogin(String userEmail);
 	
 	List<UserDto> list();
-	UserDto detail(int studentId);
+	UserDto detail(int userId);
 	int insert(UserDto dto);
 	int update(UserDto dto);
-	int delete(int studentId);
+	int delete(int userId);
+	UserDto detailByEmail(String userEmail);
+	int updateUserPw(UserDto userDto);
 }

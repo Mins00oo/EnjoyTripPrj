@@ -1,6 +1,8 @@
 package com.mycom.joytrip.user.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mycom.joytrip.user.dto.UserDto;
@@ -34,14 +37,36 @@ public class UserController {
 		return dto;
 	}
 	
+	@GetMapping(value="/users/email/{userEmail}")
+	//HttpSession session으로 어케 처리 해볼지 생각
+	public Map<String, String> detailByEmail(@PathVariable String userEmail){
+		UserDto dto = userService.detailByEmail(userEmail);
+		Map<String, String> map = new HashMap<>();
+		
+		if (dto == null) {
+			map.put("result", "fail");
+			return map;
+		}
+		map.put("result", "success");
+		return map;
+	}
+	
 	@PostMapping(value="/users")
-	public int insert(UserDto dto){
-		return userService.insert(dto);
+	public Map<String, String> insert(@RequestBody UserDto dto) {
+		userService.insert(dto);
+		Map<String, String> map = new HashMap<>();
+		map.put("result", "success");
+		return map;
 	}
 	
 	@PutMapping(value="/users/{userId}")
 	public int update(@PathVariable int userId, UserDto dto){
 		return userService.update(dto);
+	}
+	
+	@PutMapping(value="/users/pw")
+	public int changeUserPw(@RequestBody UserDto userDto){
+		return userService.updateUserPw(userDto);
 	}
 	
 	@DeleteMapping(value="/users/{userId}")
