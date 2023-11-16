@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mycom.joytrip.review.dao.ReviewDao">
+	<insert id="registReview" parameterType="com.mycom.joytrip.review.dto.ReviewRequestDto">
+		INSERT INTO REVIEW (user_id, content_id, content, score)
+		VALUES (#{userId}, #{contentId}, #{content}, #{score});
+	</insert>
+	
+	<select id="retrieveMyReviewList" parameterType="int" resultType="com.mycom.joytrip.review.dto.ReviewResponseDto">
+		SELECT 
+		    r.review_id,
+		    r.user_id,
+		    u.user_nickname,
+		    r.content_id,
+		    a.title,
+		    a.addr1,
+		    a.first_image,
+		    a.first_image2,
+		    a.latitude,
+		    a.longitude,
+		    r.content,
+		    r.score,
+		    r.createAt,
+		    r.updateAt
+		FROM
+		    review r
+		        INNER JOIN
+		    user u ON r.user_id = u.user_id
+		        INNER JOIN
+		    attraction_info a ON r.content_id = a.content_id
+		WHERE
+		    r.user_id = #{userId};
+	</select>
+	
+	<select id="retriveContentReviewList" parameterType="int" resultType="com.mycom.joytrip.review.dto.ReviewResponseDto">
+		SELECT 
+		    r.review_id,
+		    r.user_id,
+		    u.user_nickname,
+		    r.content_id,
+		    a.title,
+		    a.addr1,
+		    a.first_image,
+		    a.first_image2,
+		    a.latitude,
+		    a.longitude,
+		    r.content,
+		    r.score,
+		    r.createAt,
+		    r.updateAt
+		FROM
+		    review r
+		        INNER JOIN
+		    user u ON r.user_id = u.user_id
+		        INNER JOIN
+		    attraction_info a ON r.content_id = a.content_id
+		WHERE
+		    r.content_id = #{contentId}
+	</select>
+	
+	<delete id="deleteReview" parameterType="int">
+		delete 
+			from review 
+		where 
+			review_id = #{reviewId}
+	</delete>
+	
+	<select id="retrieveUserCheck" parameterType="map" resultType="com.mycom.joytrip.review.dto.CheckResponseDto">
+		SELECT 
+		    visited_id
+		FROM
+		   	visited
+		WHERE
+		    user_id = #{userId} AND content_id = #{contentId}
+	</select>
+	
+	<select id="retrieveUserCheckList" parameterType="int" resultType="com.mycom.joytrip.review.dto.CheckResponseDto">
+		SELECT 
+		    c.check_id,
+		    c.user_id,
+		    c.content_id,
+		    u.user_nickname,
+		    a.title,
+		    a.addr1,
+		    a.zipcode,
+		    a.first_image,
+		    a.first_image2,
+		    a.readcount,
+		    a.sido_code,
+		    a.gugun_code,
+		    a.latitude,
+		    a.longitude
+		FROM
+		    `check` c
+		        INNER JOIN
+		    user u ON c.user_id = u.user_id
+		        INNER JOIN
+		    attraction_info a ON a.content_id = c.content_id
+		WHERE
+		    c.user_id = #{userId}
+	</select>
+	
+	<select id="retriveMyTourReview" parameterType="map" resultType="com.mycom.joytrip.review.dto.ReviewResponseDto">
+		SELECT 
+		    review_id
+		FROM
+		    review
+		WHERE
+		    user_id = #{userId} AND content_id = #{contentId}
+	</select>
+</mapper>
+
+
+
+
+

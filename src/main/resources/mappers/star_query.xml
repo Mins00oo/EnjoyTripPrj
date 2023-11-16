@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mycom.joytrip.star.dao.StarDao">
+	<insert id="registStar" parameterType="com.mycom.joytrip.star.dto.StarRequestDto">
+		insert into star (content_id, user_id) 
+		values (#{contentId}, #{userId})
+	</insert>
+	
+	<select id="retrieveStarList" parameterType="int" resultType="com.mycom.joytrip.star.dto.StarResponseDto">
+		SELECT 
+			user_id,
+		    s.content_id,
+		    ai.title,
+		    ai.addr1,
+		    ai.zipcode,
+		    ai.first_image,
+		    ai.first_image2
+		FROM
+		    star s
+		        INNER JOIN
+		    attraction_info ai ON s.content_id = ai.content_id
+		WHERE
+		    user_id = #{userId};
+	</select>
+	
+	<delete id="deleteStar" parameterType="map">
+		delete from star
+		where 
+			user_id = #{userId} 
+			and 
+			content_id = #{contentId}
+	</delete>
+	
+	<select id="retriveMyStar" parameterType="int" resultType="com.mycom.joytrip.star.dto.StarResponseDto">
+		SELECT 
+			user_id,
+		    s.content_id,
+		    ai.title,
+		    ai.addr1,
+		    ai.zipcode,
+		    ai.first_image,
+		    ai.first_image2
+		FROM
+		    star s
+		        INNER JOIN
+		    attraction_info ai ON s.content_id = ai.content_id
+		WHERE
+		    s.user_id = #{userId} and s.content_id = #{contentId}
+	</select>
+</mapper>
+
+
+
+
+
