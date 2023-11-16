@@ -1,17 +1,20 @@
 package com.mycom.joytrip.user.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.mycom.joytrip.user.dto.UserDto;
 import com.mycom.joytrip.user.service.UserService;
 
-@Controller
+@RestController
 public class LoginController {
 	
 	@Autowired
@@ -23,18 +26,21 @@ public class LoginController {
 	 * 실패시 login.jsp로 재요청
 	 */
 	@PostMapping("/login")
-	public String userLogin(UserDto userDto, HttpSession session) {
-		System.out.println(userDto);
+	public Map<String, String> userLogin(@RequestBody UserDto userDto, HttpSession session) {
 		UserDto user = userService.userLogin(userDto);
-		System.out.println(user);
+		Map<String, String> map = new HashMap<>();
 
 		if (user == null) {
 			System.out.println("로그인 실패");
-			return "redirect:/home.html";
+			map.put("result", "fail");
+			return map;
 		}
 		session.setAttribute("userDto", user);
 		session.setAttribute("login", "success");
-		return "redirect:/userMain.html";
+		map.put("result", "success");
+		map.put("userId", Integer.toString(user.getUserId()));
+		map.put("userNickName", user.getUserNickname());
+		return map;
 	}
 
 	
@@ -43,9 +49,11 @@ public class LoginController {
 	 * 로그아웃 후 메인화면으로 이동
 	 */
 	@GetMapping("/logout")
-	public ModelAndView userLogout(HttpSession session) {
+	public Map<String, String> userLogout(HttpSession session) {
 		session.invalidate();
-		ModelAndView mav = new ModelAndView("redirect:/home.html");
-		return mav;
+		Map<String, String> map = new HashMap<>();
+		
+		map.put("result", "success");
+		return map;
 	}
 }

@@ -19,9 +19,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
 		ExceptionResponse exceptionResponse = new ExceptionResponse(
 				LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초")), ex.getMessage(),
-				request.getDescription(false));
+				request.getDescription(false), "false");
 
-		return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity(exceptionResponse, HttpStatus.OK);
 	}
 
 }
