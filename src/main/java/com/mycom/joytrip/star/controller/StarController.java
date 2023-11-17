@@ -28,8 +28,9 @@ public class StarController {
 	
 	@PostMapping("/tours/stars")
 	public ResponseEntity<Object> registTourStar(@RequestBody StarRequestDto starDto, HttpSession session) {
-//		UserDto userDto = (UserDto) session.getAttribute("userDto");
-//		starDto.setUserId(userDto.getUserId());
+		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		System.out.println(userDto.getUserId());
+		starDto.setUserId(userDto.getUserId());
 		starService.registStar(starDto);
 		
 		return ResponseEntity.status(200).body("즐겨찾기 등록이 완료되었습니다");

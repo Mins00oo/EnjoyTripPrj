@@ -35,12 +35,15 @@ public class ReviewController {
 		return ResponseEntity.status(200).body("후기 등록 완료되었습니다!");
 	}
 	
+	//본인이 쓴 리뷰만 보기
 	@GetMapping("/tours/reviews")
 	public ResponseEntity<Object> myTourReviewList(HttpSession session) {
 //		UserDto userDto = (UserDto) session.getAttribute("userDto");
 		List<ReviewResponseDto> list = reviewService.retrieveMyReviewList(1);
 		return ResponseEntity.status(200).body(list);
 	}
+	
+	//해당 관광지에 대한 리뷰 보기???
 	
 	@DeleteMapping("/tours/reviews/{reviewId}")
 	public ResponseEntity<Object> deleteTourReview(@PathVariable int reviewId) {
