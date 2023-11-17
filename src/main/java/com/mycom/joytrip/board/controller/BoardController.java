@@ -1,26 +1,28 @@
 package com.mycom.joytrip.board.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.mycom.joytrip.board.dto.BoardRequestDto;
 import com.mycom.joytrip.board.dto.BoardResponseDto;
 import com.mycom.joytrip.board.service.BoardService;
+import com.mycom.joytrip.user.dto.UserDto;
 
 @RestController
-@CrossOrigin(originPatterns = "*", allowedHeaders = "*")
 public class BoardController {
 	@Autowired
 	BoardService boardService;
@@ -38,14 +40,15 @@ public class BoardController {
 	}
 	
 	@PostMapping(value="/boards")
-	public ResponseEntity<Object> insert(@RequestPart BoardRequestDto dto, @RequestPart(value = "boardImg", required = false) MultipartFile multipartFile){
-		if (multipartFile != null && !multipartFile.isEmpty()) {
-			boardService.insert(dto, multipartFile);
-		} else {
-			boardService.insert(dto, null);
-		}
+	public Map<String, String> insert(BoardRequestDto boardDto, MultipartHttpServletRequest request, HttpSession session){
+		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		boardDto.setUserId(userDto.getUserId());
+		boardService.boardInsert(boardDto, request);
+		Map<String, String> map = new HashMap<>();
 		
-		return ResponseEntity.status(HttpStatus.OK).body("게시글 작성이 완료되었습니다.");
+		map.put("result", "success");
+		
+		return map;
 	}
 	
 	@PutMapping(value="/boards/{boardId}")

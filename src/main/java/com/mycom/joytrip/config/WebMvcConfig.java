@@ -18,6 +18,7 @@ public class WebMvcConfig implements WebMvcConfigurer{
 				.addPathPatterns("/users/**")
 				.addPathPatterns("/tours/stars/**")
 				.addPathPatterns("/tours/users")
+				.addPathPatterns("/boards/**")
 //				.addPathPatterns("/tours/reviews/**")
 				.excludePathPatterns(
 						"/login/**",
