@@ -14,16 +14,16 @@ public class TestInterceptor implements HandlerInterceptor{
 	private final String jsonStr = "{\"result\" : \"login\"}";
 	
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		
+		  
 		System.out.println("TestInterceptor >>> " + request.getRequestURI());
 		
 		HttpSession session = request.getSession();
 		UserDto userDto = (UserDto) session.getAttribute("userDto");
 		
 		System.out.println(request.getMethod());
-		
-		if (userDto == null) {
-			if (request.getMethod().equals("POST") || request.getMethod().equals("OPTIONS")) {
+		System.out.println(userDto);
+		if (userDto == null) {  
+			if ((request.getRequestURI().equals("/users") && request.getMethod().equals("POST")) || request.getMethod().equals("OPTIONS")) {
 				
 				System.out.println("NO INterceptor");
 				return true;
