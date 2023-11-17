@@ -32,23 +32,27 @@
 	
 	<update id="update" parameterType="com.mycom.joytrip.user.dto.UserDto">
 		update user
-		   set user_password 	= #{userPassword}
-		   	  ,user_email		= #{userEmail}
+		   set user_email		= #{userEmail}
 		   	  ,user_name		= #{userName}
 		   	  ,user_nickname	= #{userNickname}
 		 where user_id 	= #{userId}
 	</update>
 	
-	<update id="updateUserPw" parameterType="com.mycom.joytrip.user.dto.UserDto">
+	<update id="updateUserPwBeforeLogin" parameterType="com.mycom.joytrip.user.dto.UserDto">
 		update user
 		   set user_password 	= #{userPassword}
 		 where user_email 	= #{userEmail}
 	</update>
 	
-	<delete id="delete" parameterType="int">
-		delete from user 
-		 where user_id = #{userId}
-	</delete>
+	<update id="delete" parameterType="int">
+	    update user
+	        set user_password = null,
+	            user_email = null,
+	            user_name = null,
+	            user_nickname = null
+	    where user_id = #{userId}
+	</update>
+
 	
 	
 </mapper>

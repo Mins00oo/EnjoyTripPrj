@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService{
 	public int updateUserPw(UserDto userDto) {
 		String hashpw = BCrypt.hashpw(userDto.getUserPassword(), BCrypt.gensalt());
 		userDto.setUserPassword(hashpw);
-		return userDao.updateUserPw(userDto);
+		return userDao.updateUserPwBeforeLogin(userDto);
 	}
 
 }

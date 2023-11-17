@@ -60,7 +60,9 @@ public class UserController {
 	}
 	
 	@PutMapping(value="/users/{userId}")
-	public int update(@PathVariable int userId, UserDto dto){
+	public int update(@PathVariable int userId, @RequestBody UserDto dto){
+		dto.setUserId(userId);
+		
 		return userService.update(dto);
 	}
 	
