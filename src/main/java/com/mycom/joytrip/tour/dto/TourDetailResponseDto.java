@@ -34,11 +34,13 @@ public class TourDetailResponseDto {
 	
 	private double latitude;
 	
-	private double longtitude;
+	private double longitude;
 	
 	private double avgScore;
 	
 	private boolean favorite;
+	
+	private String overview;
 	
 	List<ReviewResponseDto> reviewResponseDtos;
 }

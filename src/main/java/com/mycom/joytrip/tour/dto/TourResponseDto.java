@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class TourResponseDto {
 	private int contentId;
 	
@@ -30,8 +32,10 @@ public class TourResponseDto {
 	
 	private double latitude;
 	
-	private double longtitude;
+	private double longitude;
 
 	private double averageScore;
+	
+	private String overview;
 
 }
