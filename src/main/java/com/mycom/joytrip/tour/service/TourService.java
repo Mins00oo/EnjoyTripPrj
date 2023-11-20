@@ -28,5 +28,7 @@ public interface TourService {
 	List<TourResponseDto> mainTourListByScore();
 	
 	TourResultDto tourRegionList(TourParamDto tourParamDto);
+	
+	TourResultDto tourListByCategory(TourParamDto tourParamDto);
 
 }

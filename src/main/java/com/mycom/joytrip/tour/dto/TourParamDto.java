@@ -23,4 +23,10 @@ public class TourParamDto {
 	private int userId;
 	
 	private String region;
+	
+	private String category;
+	
+	private String option;
+	
+	private String how;
 }

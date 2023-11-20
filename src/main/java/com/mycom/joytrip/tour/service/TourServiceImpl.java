@@ -1,5 +1,6 @@
 package com.mycom.joytrip.tour.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,11 @@ public class TourServiceImpl implements TourService {
 		int count = tourDao.tourListSearchWordTotalCount(tourParamDto);
 		
 		List<TourResponseDto> list = tourDao.searchTourbyWord(tourParamDto);
+		
+		for (TourResponseDto tourResponseDto : list) {
+			int reviewCount = reviewDao.tourReviewCount(tourResponseDto.getContentId());
+			tourResponseDto.setReviewCount(reviewCount);
+		}
 		tourResultDto.setList(list);
 		tourResultDto.setCount(count);
 		return tourResultDto;
@@ -49,7 +55,19 @@ public class TourServiceImpl implements TourService {
 	public TourResultDto tourList(TourParamDto tourParamDto) {
 		TourResultDto tourResultDto = new TourResultDto();
 		int count = tourDao.tourListTotalCount();
-		List<TourResponseDto> list = tourDao.tourList(tourParamDto);
+		List<TourResponseDto> list = new ArrayList<>();
+		
+		if (tourParamDto.getOption().isEmpty()) {
+			list = tourDao.tourList(tourParamDto);
+		} else {
+			list = tourDao.tourListOrderByOption(tourParamDto);
+		}
+		
+		for (TourResponseDto tourResponseDto : list) {
+			int reviewCount = reviewDao.tourReviewCount(tourResponseDto.getContentId());
+			tourResponseDto.setReviewCount(reviewCount);
+		}
+		
 		tourResultDto.setList(list);
 		tourResultDto.setCount(count);
 		
@@ -102,11 +120,62 @@ public class TourServiceImpl implements TourService {
 	@Override
 	public TourResultDto tourRegionList(TourParamDto tourParamDto) {
 		TourResultDto tourResultDto = new TourResultDto();
-		List<TourResponseDto> list = tourDao.tourRegionList(tourParamDto);
-		int count = tourDao.tourRegionListCount(tourParamDto.getRegion());
+		List<TourResponseDto> list = new ArrayList<>();
+		int count = 0;
+		if (tourParamDto.getCategory().isEmpty() && tourParamDto.getOption().isEmpty()) {
+			// 기본 list 조회
+			list = tourDao.tourRegionList(tourParamDto);
+			count = tourDao.tourRegionListCount(tourParamDto.getRegion());
+		} else if (!tourParamDto.getCategory().isEmpty() && !tourParamDto.getOption().isEmpty()) {
+			// 카테고리 + 정렬 둘 다 할때
+			System.out.println("카테고리 + 정렬 o");
+			list = tourDao.tourRegionByCategoryOrderByOptionList(tourParamDto);
+			count = tourDao.tourListByRegionCategoryCount(tourParamDto);
+		} else if(tourParamDto.getCategory().isEmpty() && !tourParamDto.getOption().isEmpty()) {
+			// 정렬 + 카테고리 x
+			list = tourDao.tourRegionOrderByOptionList(tourParamDto);
+			count = tourDao.tourRegionListCount(tourParamDto.getRegion());
+		} else { 
+			// 정렬 x + 카테고리 o
+			list = tourDao.tourRegionByCategoryList(tourParamDto);
+			count = tourDao.tourListByRegionCategoryCount(tourParamDto);
+		}
+		
+		
+		for (TourResponseDto tourResponseDto : list) {
+			int reviewCount = reviewDao.tourReviewCount(tourResponseDto.getContentId());
+			tourResponseDto.setReviewCount(reviewCount);
+		}
+		
 		tourResultDto.setList(list);
 		tourResultDto.setCount(count);
 		
+		return tourResultDto;
+	}
+
+	@Override
+	public TourResultDto tourListByCategory(TourParamDto tourParamDto) {
+		TourResultDto tourResultDto = new TourResultDto();
+		List<TourResponseDto> list = new ArrayList<>();
+		int count = tourDao.tourListByCategoryCount(tourParamDto);
+		
+		if (tourParamDto.getOption().isEmpty()) {
+			System.out.println("without Option");
+			list = tourDao.tourListByCategory(tourParamDto);
+		} else {
+			System.out.println(tourParamDto.getOption());
+			list = tourDao.tourListByCategoryOrderByOption(tourParamDto);
+			
+		}
+		
+		System.out.println(list);
+		for (TourResponseDto tourResponseDto : list) {
+			int reviewCount = reviewDao.tourReviewCount(tourResponseDto.getContentId());
+			tourResponseDto.setReviewCount(reviewCount);
+		}
+		
+		tourResultDto.setList(list);
+		tourResultDto.setCount(count);
 		return tourResultDto;
 	}
 	

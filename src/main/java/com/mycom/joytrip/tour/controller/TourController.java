@@ -36,9 +36,15 @@ public class TourController {
 		System.out.println(tourParamDto);
 		TourResultDto tourResultDto;
 		
+		if (!tourParamDto.getCategory().isEmpty() && tourParamDto.getRegion().isEmpty()) {
+			// 카테고리별 분류
+			tourResultDto = tourService.tourListByCategory(tourParamDto);
+			System.out.println(tourResultDto);
+			return ResponseEntity.status(200).body(tourResultDto);
+		}
+		
 		if (!tourParamDto.getRegion().isEmpty()) {
-			// 지역별 검색
-			System.out.println(tourParamDto.getRegion());
+			// 지역별 검색 => 카테고리 + 정렬 가능
 			tourResultDto = tourService.tourRegionList(tourParamDto);
 			return ResponseEntity.status(200).body(tourResultDto);
 		} 

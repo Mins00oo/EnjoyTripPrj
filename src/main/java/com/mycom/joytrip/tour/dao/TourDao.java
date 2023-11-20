@@ -35,4 +35,21 @@ public interface TourDao {
 	
 	int tourRegionListCount(String region);
 	
+	List<TourResponseDto> tourListByCategory(TourParamDto tourParamDto);
+	
+	int tourListByCategoryCount(TourParamDto tourParamDto);
+	
+	// 정렬 dao 4개 만들고 service에 paramDto에 따라 분기처리해서 요청
+	
+	List<TourResponseDto> tourListByCategoryOrderByOption(TourParamDto tourParamDto);
+	
+	List<TourResponseDto> tourListOrderByOption(TourParamDto tourParamDto);
+	
+	List<TourResponseDto> tourRegionByCategoryList(TourParamDto tourParamDto);
+	
+	List<TourResponseDto> tourRegionByCategoryOrderByOptionList(TourParamDto tourParamDto);
+	
+	int tourListByRegionCategoryCount(TourParamDto tourParamDto);
+	
+	List<TourResponseDto> tourRegionOrderByOptionList(TourParamDto tourParamDto);
 }

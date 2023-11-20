@@ -37,5 +37,9 @@ public class TourResponseDto {
 	private double averageScore;
 	
 	private String overview;
+	
+	private int contentTypeId;
+	
+	private int reviewCount;
 
 }
