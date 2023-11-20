@@ -1,7 +1,5 @@
 package com.mycom.joytrip.tour.dto;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,12 +11,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class TourResultDto {
-	private List<TourResponseDto> list;
+public class TourGugunResponseDto {
+	private int gugunCode;
 	
-	private int count;
-	
-	private List<TourSidoResponseDto> sidoList;
-	
-	private List<TourGugunResponseDto> gugunList;
+	private String gugunName;
 }

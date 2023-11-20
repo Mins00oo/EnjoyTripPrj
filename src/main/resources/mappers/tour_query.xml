@@ -443,6 +443,22 @@
 			${option} ${how}
         LIMIT #{limit} OFFSET #{offset}
 	</select>
+	
+    <select id="tourSidoList" resultType="com.mycom.joytrip.tour.dto.TourSidoResponseDto">
+		SELECT 
+		    *
+		FROM
+		    sido;
+    </select>
+    
+    <select id="tourGugunList" parameterType="int" resultType="com.mycom.joytrip.tour.dto.TourGugunResponseDto">
+		SELECT 
+		    *
+		FROM
+		    gugun
+		WHERE
+			sido_code = #{sidoCode}
+    </select>
 </mapper>
 
 

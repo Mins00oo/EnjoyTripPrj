@@ -16,6 +16,7 @@ import com.mycom.joytrip.tour.dto.TourDetailResponseDto;
 import com.mycom.joytrip.tour.dto.TourParamDto;
 import com.mycom.joytrip.tour.dto.TourResponseDto;
 import com.mycom.joytrip.tour.dto.TourResultDto;
+import com.mycom.joytrip.tour.dto.TourSidoResponseDto;
 import com.mycom.joytrip.tour.service.TourService;
 import com.mycom.joytrip.user.dto.UserDto;
 
@@ -102,6 +103,18 @@ public class TourController {
 		System.out.println("main");
 		List<TourResponseDto> mainTourRecommendList = tourService.mainTourListByScore();
 		return ResponseEntity.status(200).body(mainTourRecommendList);
+	}
+	
+	@GetMapping("/tours/sido")
+	public ResponseEntity<Object> mainTourSidoList() {
+		TourResultDto result = tourService.tourSidoList();
+		return ResponseEntity.status(200).body(result);
+	}
+	
+	@GetMapping("/tours/gugun/{sidoCode}")
+	public ResponseEntity<Object> mainTourGugunList(@PathVariable int sidoCode) {
+		TourResultDto result = tourService.tourGugunList(sidoCode);
+		return ResponseEntity.status(200).body(result);
 	}
 
 }

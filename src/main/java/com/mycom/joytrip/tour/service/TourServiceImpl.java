@@ -13,9 +13,11 @@ import com.mycom.joytrip.star.dao.StarDao;
 import com.mycom.joytrip.star.dto.StarResponseDto;
 import com.mycom.joytrip.tour.dao.TourDao;
 import com.mycom.joytrip.tour.dto.TourDetailResponseDto;
+import com.mycom.joytrip.tour.dto.TourGugunResponseDto;
 import com.mycom.joytrip.tour.dto.TourParamDto;
 import com.mycom.joytrip.tour.dto.TourResponseDto;
 import com.mycom.joytrip.tour.dto.TourResultDto;
+import com.mycom.joytrip.tour.dto.TourSidoResponseDto;
 
 @Service
 public class TourServiceImpl implements TourService {
@@ -176,6 +178,25 @@ public class TourServiceImpl implements TourService {
 		
 		tourResultDto.setList(list);
 		tourResultDto.setCount(count);
+		return tourResultDto;
+	}
+
+	@Override
+	public TourResultDto tourSidoList() {
+		List<TourSidoResponseDto> sidoList = tourDao.tourSidoList();
+		TourResultDto tourResultDto = new TourResultDto();
+		
+		tourResultDto.setSidoList(sidoList);
+		return tourResultDto;
+		
+	}
+
+	@Override
+	public TourResultDto tourGugunList(int sidoCode) {
+		List<TourGugunResponseDto> list = tourDao.tourGugunList(sidoCode);
+		TourResultDto tourResultDto = new TourResultDto();
+		
+		tourResultDto.setGugunList(list);
 		return tourResultDto;
 	}
 	
