@@ -14,11 +14,11 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class BoardResultDto {
-	private int result;
-	
-	private BoardResponseDto dto; // 상세 1건 조회
-	
-	private List<BoardResponseDto> list; // 목록 조회
-	
-	private int count; // 총건수
+    private int result;
+    
+    private BoardResponseDto dto; // 상세 1건 조회
+    
+    private List<BoardResponseDto> list; // 목록 조회
+    
+    private int count; // 총건수
 }

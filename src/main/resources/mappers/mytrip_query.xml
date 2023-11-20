@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mycom.joytrip.mytrip.dao.MytripDao">
+
+	<!-- 마이트립 찐소유자가 가지고 있는 제목 조회 -->
+	<select id="getTitle" parameterType="int">
+		select title
+  		  from mytrip_info
+ 		 where mytrip_id = #{mytripId} and is_owner = 1;
+	</select>
+
+	<!-- 유저가 갖고 있는 마이트립 리스트 조회 -->
+	<select id="mytripList" parameterType="int" resultType="com.mycom.joytrip.mytrip.dto.MytripResponseDto">
+		select mytrip_id, title
+		  from mytrip_info
+		 where user_id = #{userId}
+	</select>
+	
+	<!-- 개별 마이트립에 대한 관광지 리스트 조회 -->
+	<select id="mytripDetail" resultType="com.mycom.joytrip.mytrip.dto.MytripResponseDto">
+        select mi.mytrip_id, mi.title, md.content_id
+		  from mytrip_info mi 
+		  left join mytrip_detail md on mi.mytrip_id = md.mytrip_id
+		 where mi.user_id = #{userId} and mi.mytrip_id = #{mytripId}
+	</select>
+	
+	<!-- 사용자별 마이트립 리스트 개수 -->
+	<select id="countMytrip" resultType="int">
+        select count(*)
+		  from mytrip_info
+		 where user_id = 1
+		 group by user_id
+    </select>
+    
+    <!-- 특정 마이트립에 대한 소유자 수 -->
+    <select id="countUser" resultType="int">
+    	select count(*)
+ 		  from mytrip_info mi
+  		  left join user u on mi.user_id = u.user_id
+ 		 where mytrip_id = #{mytripId};
+    </select>
+	
+	<!-- 마이트립 추가 -->
+	<insert id="insert" parameterType="com.mycom.joytrip.mytrip.dto.MytripRequestDto">
+		insert into mytrip_info (user_id, is_owner, title)
+		values (#{userId}, 1, #{title})
+	</insert>
+	
+	<!-- 해당 마이트립 다른 사용자에게 공유 -->
+	<insert id="share" parameterType="com.mycom.joytrip.mytrip.dto.MytripRequestDto">
+		insert into mytrip_info (mytrip_id, user_id, title)
+		values (#{mytripId}, #{userId}, #{title})
+	</insert>
+	
+	<!-- 마이트립 내 관광지 추가 -->
+	<insert id="insertTour" parameterType="com.mycom.joytrip.mytrip.dto.MytripTourDto">
+	    insert into mytrip_detail (mytrip_id, content_id)
+		values (#{mytripId}, #{contentId});
+	</insert>
+	
+	<!-- 마이트립 제목 수정 -->
+	<update id="update" parameterType="com.mycom.joytrip.mytrip.dto.MytripRequestDto">
+		update mytrip_info
+ 		   set title = #{title}
+ 		 where mytrip_id = #{mytripId};
+	</update>
+	
+	<!-- 해당 마이트립에 대한 소유자 확인 -->
+	<select id="checkOwner" parameterType="com.mycom.joytrip.mytrip.dto.MytripRequestDto">
+		select is_owner
+		  from mytrip_info
+		 where mytrip_id = #{mytripId} and user_id = #{userId}
+	</select>
+	
+	<delete id="delete" parameterType="int">
+		delete from mytrip_info 
+		 where mytrip_id = #{mytripId}
+	</delete>
+	
+	<delete id="deleteTour" parameterType="com.mycom.joytrip.mytrip.dto.MytripTourDto">
+		delete from mytrip_detail
+ 		 where mytrip_id = #{mytripId} and content_id = #{contentId}
+	</delete>
+	
+	<delete id="deleteAllTour" parameterType="int">
+		delete from mytrip_info 
+ 		 where mytrip_id = #{mytripId};
+	</delete>
+
+</mapper>
