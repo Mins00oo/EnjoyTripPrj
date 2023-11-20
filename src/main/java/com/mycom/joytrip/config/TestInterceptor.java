@@ -14,9 +14,10 @@ public class TestInterceptor implements HandlerInterceptor{
 	private final String jsonStr = "{\"result\" : \"login\"}";
 	
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		
+		  
 		System.out.println("TestInterceptor >>> " + request.getRequestURI());
 		
+<<<<<<< HEAD
 	//		HttpSession session = request.getSession();
 	//		UserDto userDto = (UserDto) session.getAttribute("userDto");
 	//		
@@ -33,6 +34,24 @@ public class TestInterceptor implements HandlerInterceptor{
 	//			System.out.println("need login");
 	//			return false;
 	//		}
+=======
+		HttpSession session = request.getSession();
+		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		
+		System.out.println(request.getMethod());
+		System.out.println(userDto);
+		if (userDto == null) {  
+			if ((request.getRequestURI().equals("/users") && request.getMethod().equals("POST")) || request.getMethod().equals("OPTIONS")) {
+				
+				System.out.println("NO INterceptor");
+				return true;
+			}
+			// 로그인 필요함
+			response.getWriter().write(jsonStr);
+			System.out.println("need login");
+			return false;
+		}
+>>>>>>> 68d37fcfd54314b4826f1cb6339a816c9bb191ea
 		
 		return true;
 		

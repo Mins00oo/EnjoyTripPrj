@@ -6,14 +6,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter
 @Setter
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
-public class BoardRequestDto {
-	int userId;
-	int boardId;
-	String boardTitle;
-	String boardContent;
+public class BoardParamDto {
+	private int limit;
+	
+	private int offset;
+	
+	private String searchWord;
+	
+	private int boardId;
+	
+	private int userSeq;
 }

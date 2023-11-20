@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mycom.joytrip.tour.dao.TourDao">
-	<select id="searchTourbyWord" parameterType="String" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
+	<select id="searchTourbyWord" parameterType="map" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
 		SELECT 
 			content_id,
 		    title,
@@ -17,7 +17,9 @@
 		FROM
 		    attraction_info a
 		WHERE
-		    a.title LIKE CONCAT('%', #{searchWord}, '%') or a.addr1 LIKE CONCAT('%', #{searchWord}, '%')
+			a.first_image != null and 
+		    (a.title LIKE CONCAT('%', #{searchWord}, '%') or a.addr1 LIKE CONCAT('%', #{searchWord}, '%'))
+        LIMIT #{limit} OFFSET #{offset}
 	</select>
 	
 	<select id="searchTourbyWordAndOrder" parameterType="map" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
@@ -59,7 +61,7 @@
 		ORDER BY readcount ${order}
 	</select>
 	
-	<select id="tourList" parameterType="String" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
+	<select id="tourList" parameterType="map" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
 		SELECT 
 		    a.content_id,
 		    a.title,
@@ -77,9 +79,12 @@
 		    attraction_info a 
 		LEFT JOIN 
 		    review r ON a.content_id = r.content_id
+		WHERE
+			a.first_image != ''
 		GROUP BY
 		    a.content_id, a.title, a.addr1, a.zipcode, a.first_image, a.first_image2,
 		    a.readcount, a.sido_code, a.gugun_code, a.latitude, a.longitude
+        LIMIT #{limit} OFFSET #{offset}
 	</select>
 	
 	<select id="tourDetail" parameterType="int" resultType="com.mycom.joytrip.tour.dto.TourDetailResponseDto">
@@ -95,11 +100,14 @@
 		    a.gugun_code,
 		    a.latitude,
 		    a.longitude,
-		    AVG(r.score) AS average_score -- 평균 점수 계산
+		    AVG(r.score) AS average_score,
+		    ad.overview
 		FROM
-		    attraction_info a 
-		LEFT JOIN 
+		    attraction_info a
+		        LEFT JOIN
 		    review r ON a.content_id = r.content_id
+				LEFT JOIN
+			attraction_description ad ON a.content_id = ad.content_id
 		GROUP BY
 		    a.content_id, a.title, a.addr1, a.zipcode, a.first_image, a.first_image2,
 		    a.readcount, a.sido_code, a.gugun_code, a.latitude, a.longitude
@@ -107,7 +115,99 @@
 			a.content_id = #{contentId};
 	</select>
 	
+	<select id="tourRelateList" parameterType="int" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
+		SELECT 
+		    a.content_id,
+		    a.title,
+		    a.addr1,
+		    a.zipcode,
+		    a.first_image,
+		    a.first_image2,
+		    a.readcount,
+		    a.sido_code,
+		    a.gugun_code,
+		    a.latitude,
+		    a.longitude,
+		    AVG(r.score) AS average_score,
+		    ad.overview
+		FROM
+		    attraction_info a
+		        LEFT JOIN
+		    review r ON a.content_id = r.content_id
+				LEFT JOIN
+			attraction_description ad ON a.content_id = ad.content_id
+		WHERE a.sido_code = #{sidoCode}
+		GROUP BY a.content_id , a.title , a.addr1 , a.zipcode , a.first_image , a.first_image2 , a.readcount , a.sido_code , a.gugun_code , a.latitude , a.longitude
+		ORDER BY a.readcount DESC
+		LIMIT 3;
+	</select>
+	
+	<select id="mainTourListByScore" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
+		SELECT 
+		    a.content_id,
+		    a.title,
+		    a.addr1,
+		    a.zipcode,
+		    a.first_image,
+		    a.first_image2,
+		    a.readcount,
+		    a.sido_code,
+		    a.gugun_code,
+		    a.latitude,
+		    a.longitude,
+		    AVG(r.score) AS average_score,
+		    ad.overview
+		FROM
+		    attraction_info a
+		        LEFT JOIN
+		    review r ON a.content_id = r.content_id
+				LEFT JOIN
+			attraction_description ad ON a.content_id = ad.content_id
+		WHERE a.first_image != ''
+		GROUP BY a.content_id , a.title , a.addr1 , a.zipcode , a.first_image , a.first_image2 , a.readcount , a.sido_code , a.gugun_code , a.latitude , a.longitude
+		ORDER BY average_score desc
+		LIMIT 3;
+	</select>
+	
 	<select id="tourRecommendList" parameterType="String" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
+		SELECT 
+		    a.content_id,
+		    a.title,
+		    a.addr1,
+		    a.zipcode,
+		    a.first_image,
+		    a.first_image2,
+		    a.readcount,
+		    a.sido_code,
+		    a.gugun_code,
+		    a.latitude,
+		    a.longitude,
+		    AVG(r.score) AS average_score,
+		    ad.overview
+		FROM
+		    attraction_info a
+		        LEFT JOIN
+		    review r ON a.content_id = r.content_id
+				LEFT JOIN
+			attraction_description ad ON a.content_id = ad.content_id
+		GROUP BY a.content_id , a.title , a.addr1 , a.zipcode , a.first_image , a.first_image2 , a.readcount , a.sido_code , a.gugun_code , a.latitude , a.longitude
+		ORDER BY a.readcount DESC
+		LIMIT 3;
+	</select>
+	
+    <select id="tourListTotalCount" resultType="int">
+        SELECT COUNT(*) FROM attraction_info
+    </select>
+    
+    <select id="tourListSearchWordTotalCount" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+		FROM
+		    attraction_info a
+		WHERE
+		    a.title LIKE CONCAT('%', #{searchWord}, '%') or a.addr1 LIKE CONCAT('%', #{searchWord}, '%')
+    </select>
+    
+	<select id="tourRegionList" parameterType="map" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
 		SELECT 
 		    a.content_id,
 		    a.title,
@@ -125,13 +225,23 @@
 		    attraction_info a 
 		LEFT JOIN 
 		    review r ON a.content_id = r.content_id
+		WHERE
+			a.first_image != ''
+			and
+			a.addr1 LIKE CONCAT('%', #{region}, '%')
 		GROUP BY
 		    a.content_id, a.title, a.addr1, a.zipcode, a.first_image, a.first_image2,
 		    a.readcount, a.sido_code, a.gugun_code, a.latitude, a.longitude
-		ORDER BY
-			average_score desc
-		LIMIT 5
+        LIMIT #{limit} OFFSET #{offset}
 	</select>
+
+    <select id="tourRegionListCount" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+		FROM
+		    attraction_info a
+		WHERE
+		    a.addr1 LIKE CONCAT('%', #{region}, '%')
+    </select>
 </mapper>
 
 

@@ -1,38 +1,49 @@
 package com.mycom.joytrip.board.service;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mycom.joytrip.board.dao.BoardDao;
+import com.mycom.joytrip.board.dto.BoardParamDto;
 import com.mycom.joytrip.board.dto.BoardRequestDto;
 import com.mycom.joytrip.board.dto.BoardResponseDto;
+import com.mycom.joytrip.board.dto.BoardResultDto;
+import com.mycom.joytrip.common.exception.CustomInsertException;
 
 @Service
 public class BoardServiceImpl implements BoardService{
 	@Autowired
 	BoardDao boardDao;
-	private final String uploadDirectory = "C:\\SSAFY"; // 파일 업로드 디렉토리 설정
+	
+	@Value("${app.fileupload.uploadPath}")
+	String uploadPath;
+	
+	@Value("${app.fileupload.uploadFolder}")
+	String uploadFolder;
 
 	@Override
-	public List<BoardResponseDto> list() {
-		return boardDao.list();
+	public BoardResultDto boardList(BoardParamDto boardParamDto) {
+		BoardResultDto boardResultDto = new BoardResultDto();
+
+		try {
+			List<BoardResponseDto> list = boardDao.boardList(boardParamDto);
+			int count = boardDao.boardListTotalCount();
+			boardResultDto.setCount(count);
+			boardResultDto.setList(list);
+		} catch (Exception e) {
+			throw new CustomInsertException("게시글 조회 중 문제가 생겼습니다.");
+		}
+
+		return boardResultDto;
 	}
 
 	@Override
 	public BoardResponseDto detail(int boardId) {
 		return boardDao.detail(boardId);
-	}
-
-	@Override
-	public int insert(BoardRequestDto dto, MultipartFile multipartFile) {
-		return boardDao.insert(dto);
 	}
 
 	@Override
@@ -44,19 +55,36 @@ public class BoardServiceImpl implements BoardService{
 	public int delete(int boardId) {
 		return boardDao.delete(boardId);
 	}
-	
-    private String saveFile(MultipartFile file) throws IOException {
-        Path uploadPath = Paths.get(uploadDirectory);
 
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
+	@Override
+	@Transactional
+	public int boardInsert(BoardRequestDto boardDto) {
+		System.out.println(boardDto);
+		try {
+			boardDao.insert(boardDto); 
+		} catch (Exception e) {
+			throw new CustomInsertException("게시글 작성 데이터가 문제가 있습니다");
+		}
+		
+		return 1;
+	}
 
-        String filename = file.getOriginalFilename();
-        Path filePath = uploadPath.resolve(filename);
-        Files.copy(file.getInputStream(), filePath);
+	@Override
+	public BoardResultDto boardListSearchWord(BoardParamDto boardParamDto) {
+		BoardResultDto boardResultDto = new BoardResultDto();
+		try {
+			List<BoardResponseDto> list = boardDao.boardListSearchWord(boardParamDto);
+			int count = boardDao.boardListSearchWordTotalCount(boardParamDto);
+			boardResultDto.setList(list);
+			boardResultDto.setCount(count);
 
-        return filePath.toString();
-    }	
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CustomInsertException("검색 조건에 맞는 조회에 실패하였습니다.");
+		}
+
+		return boardResultDto;
+	}
+
 	
 }

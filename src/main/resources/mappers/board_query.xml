@@ -9,13 +9,16 @@
 		 where u.user_id = b.user_id and board_id = #{boardId}
 	</select>
 	
-	<select id="list" resultType="com.mycom.joytrip.board.dto.BoardResponseDto">
-		select u.user_id, u.user_nickname, b.board_id, b.board_title, b.board_date, b.board_content
-		  from user u, board b
-		 where u.user_id = b.user_id
+	<select id="boardList" resultType="com.mycom.joytrip.board.dto.BoardResponseDto">
+        SELECT b.BOARD_ID, b.user_id, u.USER_NAME, u.USER_NICKNAME,
+                 b.BOARD_TITLE, b.BOARD_CONTENT, b.board_date
+          FROM BOARD b, user u
+         WHERE b.user_id = u.user_id
+         ORDER BY b.BOARD_ID DESC
+         LIMIT #{limit} OFFSET #{offset}
 	</select>
 	
-	<insert id="insert" parameterType="com.mycom.joytrip.board.dto.BoardRequestDto">
+	<insert id="insert" parameterType="com.mycom.joytrip.board.dto.BoardRequestDto" useGeneratedKeys="true" keyProperty="boardId">
 		insert into board (
 		board_title, user_id, board_date, board_content)
    		values (#{boardTitle}, #{userId}, now(), #{boardContent})
@@ -26,7 +29,7 @@
 		   set board_title 	= #{boardTitle}
 		   	  ,board_date		= now()
 		   	  ,board_content	= #{boardContent}
-		 where board_id 	= #{boardId}
+		 where board_id 	= #{boardId} and user_id = #{userId}
 	</update>
 	
 	<delete id="delete" parameterType="int">
@@ -34,5 +37,28 @@
 		 where board_id = #{boardId}
 	</delete>
 	
+	<insert id="boardFileInsert" parameterType="com.mycom.joytrip.board.dto.BoardFileDto">
+	    INSERT INTO BOARD_FILE ( BOARD_ID, FILE_NAME, FILE_SIZE, FILE_CONTENT_TYPE, FILE_URL )
+	                VALUES ( #{boardId}, #{fileName}, #{fileSize}, #{fileContentType}, #{fileUrl} )
+	</insert>
 	
+    <select id="boardListSearchWord" parameterType="map" resultType="com.mycom.joytrip.board.dto.BoardResponseDto">
+        SELECT b.BOARD_ID, b.user_id, u.USER_NAME, u.USER_NICKNAME,
+                 b.BOARD_TITLE, b.BOARD_CONTENT, b.board_date
+          FROM BOARD b, user u
+          WHERE b.user_id = u.user_id
+            AND b.board_title LIKE CONCAT('%', #{searchWord} ,'%')
+          ORDER BY b.BOARD_ID DESC
+          LIMIT #{limit} OFFSET #{offset}
+    </select>
+    
+    <select id="boardListTotalCount" resultType="int">
+        SELECT COUNT(*) FROM BOARD
+    </select>
+    
+    <select id="boardListSearchWordTotalCount" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+          FROM BOARD
+         WHERE board_title LIKE CONCAT('%', #{searchWord} ,'%')
+    </select>
 </mapper>

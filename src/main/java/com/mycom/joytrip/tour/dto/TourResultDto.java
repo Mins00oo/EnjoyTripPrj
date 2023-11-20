@@ -1,4 +1,6 @@
-package com.mycom.joytrip.board.dto;
+package com.mycom.joytrip.tour.dto;
+
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,9 +13,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class BoardRequestDto {
-	int userId;
-	int boardId;
-	String boardTitle;
-	String boardContent;
+public class TourResultDto {
+	private List<TourResponseDto> list;
+	
+	private int count;
 }
