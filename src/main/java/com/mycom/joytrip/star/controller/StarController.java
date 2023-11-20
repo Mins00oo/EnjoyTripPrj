@@ -28,6 +28,7 @@ public class StarController {
 	
 	@PostMapping("/tours/stars")
 	public ResponseEntity<Object> registTourStar(@RequestBody StarRequestDto starDto, HttpSession session) {
+
 		UserDto userDto = (UserDto) session.getAttribute("userDto");
 		System.out.println(userDto.getUserId());
 		starDto.setUserId(userDto.getUserId());

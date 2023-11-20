@@ -76,7 +76,7 @@
 	
 	<select id="retrieveUserCheckList" parameterType="int" resultType="com.mycom.joytrip.review.dto.CheckResponseDto">
 		SELECT 
-		    c.check_id,
+		    c.visited_id,
 		    c.user_id,
 		    c.content_id,
 		    u.user_nickname,
@@ -91,7 +91,7 @@
 		    a.latitude,
 		    a.longitude
 		FROM
-		    `check` c
+		    visited c
 		        INNER JOIN
 		    user u ON c.user_id = u.user_id
 		        INNER JOIN
@@ -108,6 +108,14 @@
 		WHERE
 		    user_id = #{userId} AND content_id = #{contentId}
 	</select>
+	
+    <select id="tourReviewCount" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+		FROM
+		    review r
+		WHERE
+		    r.content_id = #{contentId}
+    </select>
 </mapper>
 
 
