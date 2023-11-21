@@ -16,4 +16,7 @@ public class MytripRequestDto {
 	int userId;
 	int isOwner;
 	String title;
+	int contentId;
+	double latitude;
+	double longitude;
 }

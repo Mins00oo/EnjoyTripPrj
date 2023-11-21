@@ -90,4 +90,9 @@ public class MytripSeviceImpl implements MytripService{
 		return dao.countUser(mytripId);
 	}
 
+	@Override
+	public int countTour(int mytripId) {
+		return dao.countTour(mytripId);
+	}
+
 }

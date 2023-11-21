@@ -19,4 +19,5 @@ public interface MytripService {
 	int deleteTour(MytripTourDto dto);						//마이트립 내 관광지 삭제
 	int countMytrip(int userId);							//마이트립 개수
 	int countUser(int mytripId);							//마이트립에 대한 소유자 수
+	int countTour(int mytripId);							//마이트립에 대한 관광지 개수
 }
