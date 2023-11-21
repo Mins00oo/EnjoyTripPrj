@@ -84,7 +84,7 @@
 	</delete>
 	
 	<delete id="deleteAllTour" parameterType="int">
-		delete from mytrip_info 
+		delete from mytrip_detail
  		 where mytrip_id = #{mytripId};
 	</delete>
 

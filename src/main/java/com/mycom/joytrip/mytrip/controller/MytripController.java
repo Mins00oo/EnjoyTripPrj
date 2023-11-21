@@ -3,6 +3,7 @@ package com.mycom.joytrip.mytrip.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
+import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +29,10 @@ public class MytripController {
 	@GetMapping(value="/mytrips")
 	List<MytripResponseDto> mytripList(HttpSession session){
 		//test용
-//		return service.mytripList(1);
+		return service.mytripList(3);
 		
-		UserDto userDto = (UserDto) session.getAttribute("userDto");
-		return service.mytripList(userDto.getUserId());
+//		UserDto userDto = (UserDto) session.getAttribute("userDto");
+//		return service.mytripList(userDto.getUserId());
 	}
 	
 	@GetMapping(value="/mytrips/{mytripId}")
@@ -65,7 +66,7 @@ public class MytripController {
 	}
 	
 	@DeleteMapping(value="/mytrips/tour")
-	int deleteTour(MytripTourDto dto) {	
+	int deleteTour(@RequestBody MytripTourDto dto) {	
 		return service.deleteTour(dto);
 	}
 	
