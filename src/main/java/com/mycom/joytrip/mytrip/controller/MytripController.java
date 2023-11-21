@@ -3,7 +3,6 @@ package com.mycom.joytrip.mytrip.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
-import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,11 +27,8 @@ public class MytripController {
 	
 	@GetMapping(value="/mytrips")
 	List<MytripResponseDto> mytripList(HttpSession session){
-		//test용
-		return service.mytripList(3);
-		
-//		UserDto userDto = (UserDto) session.getAttribute("userDto");
-//		return service.mytripList(userDto.getUserId());
+		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		return service.mytripList(userDto.getUserId());
 	}
 	
 	@GetMapping(value="/mytrips/{mytripId}")
@@ -60,13 +56,20 @@ public class MytripController {
 		return service.update(dto);
 	}
 	
-	@DeleteMapping(value="/mytrips")
-	ResponseEntity<Object> delete(@RequestBody MytripRequestDto dto) {
+	@DeleteMapping(value="/mytrips/{mytripId}")
+	ResponseEntity<Object> delete(@PathVariable int mytripId, HttpSession session) {
+		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		MytripRequestDto dto = new MytripRequestDto();
+		dto.setUserId(userDto.getUserId());
+		dto.setMytripId(mytripId);
 		return service.delete(dto);
 	}
 	
-	@DeleteMapping(value="/mytrips/tour")
-	int deleteTour(@RequestBody MytripTourDto dto) {	
+	@DeleteMapping(value="/delete/mytrips/tour/{mytripId}/{contentId}")
+	int deleteTour(@PathVariable int mytripId, int contentId) {
+		MytripTourDto dto = new MytripTourDto();
+		dto.setMytripId(mytripId);
+		dto.setContentId(contentId);
 		return service.deleteTour(dto);
 	}
 	
@@ -79,5 +82,10 @@ public class MytripController {
 	@GetMapping(value="/mytrips/countUser")
 	int countUser(@RequestBody int mytripId) {
 		return service.countUser(mytripId);
+	}
+	
+	@GetMapping(value="/mytrips/countTour")
+	int countTour(@RequestBody int mytripId) {
+		return service.countTour(mytripId);
 	}
 }

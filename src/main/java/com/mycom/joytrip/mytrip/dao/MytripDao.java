@@ -22,5 +22,6 @@ public interface MytripDao {
 	int deleteTour(MytripTourDto dto);						//마이트립 내 관광지 삭제
 	int deleteAllTour(int mytripId);						//마이트립 내 관광지 모두 삭제
 	int countMytrip(int userId);							//사용자가 가진 마이트립 수
-	public int countUser(int mytripId);						//마이트립에 대한 소유자 수
+	int countUser(int mytripId);							//마이트립에 대한 소유자 수
+	int countTour(int mytripId);							//마이트립에 대한 관광지 개수
 }

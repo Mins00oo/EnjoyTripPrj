@@ -12,16 +12,17 @@
 
 	<!-- 유저가 갖고 있는 마이트립 리스트 조회 -->
 	<select id="mytripList" parameterType="int" resultType="com.mycom.joytrip.mytrip.dto.MytripResponseDto">
-		select mytrip_id, title
+		select mytrip_id, title, is_owner, cre_date
 		  from mytrip_info
 		 where user_id = #{userId}
 	</select>
 	
 	<!-- 개별 마이트립에 대한 관광지 리스트 조회 -->
 	<select id="mytripDetail" resultType="com.mycom.joytrip.mytrip.dto.MytripResponseDto">
-        select mi.mytrip_id, mi.title, md.content_id
+        select mi.mytrip_id, mi.title, md.content_id, ai.latitude, ai.longitude, ai.title as content_title
 		  from mytrip_info mi 
 		  left join mytrip_detail md on mi.mytrip_id = md.mytrip_id
+		  left join attraction_info ai on md.content_id = ai.content_id
 		 where mi.user_id = #{userId} and mi.mytrip_id = #{mytripId}
 	</select>
 	
@@ -38,7 +39,14 @@
     	select count(*)
  		  from mytrip_info mi
   		  left join user u on mi.user_id = u.user_id
- 		 where mytrip_id = #{mytripId};
+ 		 where mytrip_id = #{mytripId}
+    </select>
+    
+    <!-- 해당 마이트립에 대한 관광지 개수 -->
+    <select id="countTour" resultType="int">
+    	select count(*)
+    	  from mytrip_detail
+    	 where mytrip_id = #{mytripId}
     </select>
 	
 	<!-- 마이트립 추가 -->
@@ -54,7 +62,7 @@
 	</insert>
 	
 	<!-- 마이트립 내 관광지 추가 -->
-	<insert id="insertTour" parameterType="com.mycom.joytrip.mytrip.dto.MytripTourDto">
+	<insert id="insertTour" parameterType="com.mycom.joytrip.mytrip.dto.MytripRequestDto">
 	    insert into mytrip_detail (mytrip_id, content_id)
 		values (#{mytripId}, #{contentId});
 	</insert>

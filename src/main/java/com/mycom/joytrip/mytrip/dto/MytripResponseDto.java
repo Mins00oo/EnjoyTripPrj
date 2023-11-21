@@ -14,6 +14,12 @@ import lombok.ToString;
 public class MytripResponseDto {
 	int mytripId;
 	int contentId;
+	int isOwner;
 	String title;
 	int mytripCnt;
+	String creDate;
+	String modDate;
+	double latitude;
+	double longitude;
+	String contentTitle;
 }
