@@ -30,5 +30,8 @@ public interface TourService {
 	TourResultDto tourRegionList(TourParamDto tourParamDto);
 	
 	TourResultDto tourListByCategory(TourParamDto tourParamDto);
-
+	
+	TourResultDto tourSidoList();
+	
+	TourResultDto tourGugunList(int sidoCode);
 }

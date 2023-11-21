@@ -6,8 +6,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.mycom.joytrip.tour.dto.TourDetailResponseDto;
+import com.mycom.joytrip.tour.dto.TourGugunResponseDto;
 import com.mycom.joytrip.tour.dto.TourParamDto;
 import com.mycom.joytrip.tour.dto.TourResponseDto;
+import com.mycom.joytrip.tour.dto.TourSidoResponseDto;
 
 @Mapper
 public interface TourDao {
@@ -52,4 +54,8 @@ public interface TourDao {
 	int tourListByRegionCategoryCount(TourParamDto tourParamDto);
 	
 	List<TourResponseDto> tourRegionOrderByOptionList(TourParamDto tourParamDto);
+	
+	List<TourSidoResponseDto> tourSidoList();
+	
+	List<TourGugunResponseDto> tourGugunList(int sidoCode);
 }
