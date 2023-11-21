@@ -29,4 +29,8 @@ public class TourParamDto {
 	private String option;
 	
 	private String how;
+	
+	private String sidoCode;
+	
+	private String gugunCode;
 }

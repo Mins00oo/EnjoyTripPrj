@@ -25,7 +25,7 @@ public interface TourService {
 	
 	List<TourResponseDto> tourRelateList(int contentId);
 	
-	List<TourResponseDto> mainTourListByScore();
+	List<TourResponseDto> mainTourListByScore(int userId);
 	
 	TourResultDto tourRegionList(TourParamDto tourParamDto);
 	
@@ -34,4 +34,8 @@ public interface TourService {
 	TourResultDto tourSidoList();
 	
 	TourResultDto tourGugunList(int sidoCode);
+	
+	TourResultDto searchTourbyWordAndSido(TourParamDto tourParamDto);
+	
+	TourResultDto searchTourByWordAndSidoByCategory(TourParamDto tourParamDto);
 }

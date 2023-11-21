@@ -115,8 +115,26 @@ public class TourServiceImpl implements TourService {
 	}
 
 	@Override
-	public List<TourResponseDto> mainTourListByScore() {
-		return tourDao.mainTourListByScore();
+	public List<TourResponseDto> mainTourListByScore(int userId) {
+		List<TourResponseDto> list = new ArrayList<>();
+		if (userId == 0) {
+			// 로그인 하지 않은 상태
+			list = tourDao.mainTourListByScore();
+			for (TourResponseDto tour : list) {
+				tour.setFavorite(false);
+			}
+			return list;
+		} 
+		list = tourDao.mainTourListByScore();
+		
+		for (TourResponseDto tour : list) {
+			if (stardDao.retriveMyStar(userId, tour.getContentId()) != null) {
+				tour.setFavorite(true);
+			} else {
+				tour.setFavorite(false);
+			}
+		}
+		return list;
 	}
 
 	@Override
@@ -197,6 +215,31 @@ public class TourServiceImpl implements TourService {
 		TourResultDto tourResultDto = new TourResultDto();
 		
 		tourResultDto.setGugunList(list);
+		return tourResultDto;
+	}
+
+	@Override
+	public TourResultDto searchTourbyWordAndSido(TourParamDto tourParamDto) {
+		List<TourResponseDto> list = tourDao.searchTourbyWordAndSido(tourParamDto);
+		int count = tourDao.searchTourByWordAndSidoCount(tourParamDto);
+		
+		TourResultDto tourResultDto = new TourResultDto();
+		
+		tourResultDto.setCount(count);
+		tourResultDto.setList(list);
+		
+		return tourResultDto;
+	}
+
+	@Override
+	public TourResultDto searchTourByWordAndSidoByCategory(TourParamDto tourParamDto) {
+		TourResultDto tourResultDto = new TourResultDto();
+		
+		List<TourResponseDto> list = tourDao.searchTourByWordAndSidoByCategory(tourParamDto);
+		int count = tourDao.searchTourByWordAndSidoByCategoryCount(tourParamDto);
+		
+		tourResultDto.setList(list);
+		tourResultDto.setCount(count);
 		return tourResultDto;
 	}
 	

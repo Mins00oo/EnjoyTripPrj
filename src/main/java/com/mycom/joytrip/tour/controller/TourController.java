@@ -1,5 +1,6 @@
 package com.mycom.joytrip.tour.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -37,10 +38,24 @@ public class TourController {
 		System.out.println(tourParamDto);
 		TourResultDto tourResultDto;
 		
+		if (!tourParamDto.getSidoCode().isEmpty()) {
+			// 시도 + 구군으로 검색한 결과 조회
+			if (!tourParamDto.getCategory().isEmpty() && !tourParamDto.getOption().isEmpty()) {
+				// 카테고리 분류 + 정렬
+				TourResultDto result = tourService.searchTourByWordAndSidoByCategory(tourParamDto);
+				return ResponseEntity.status(200).body(result);
+			} else if (!tourParamDto.getCategory().isEmpty()) {
+				TourResultDto result = tourService.searchTourByWordAndSidoByCategory(tourParamDto);
+				return ResponseEntity.status(200).body(result);
+			} else {
+				TourResultDto result = tourService.searchTourbyWordAndSido(tourParamDto);
+				return ResponseEntity.status(200).body(result);
+			}
+		}
+		
 		if (!tourParamDto.getCategory().isEmpty() && tourParamDto.getRegion().isEmpty()) {
 			// 카테고리별 분류
 			tourResultDto = tourService.tourListByCategory(tourParamDto);
-			System.out.println(tourResultDto);
 			return ResponseEntity.status(200).body(tourResultDto);
 		}
 		
@@ -55,7 +70,6 @@ public class TourController {
         }else {
         	tourResultDto = tourService.searchTourbyWord(tourParamDto);
         }
-        System.out.println(tourResultDto);
 		return ResponseEntity.status(200).body(tourResultDto);
 	}
 	
@@ -99,9 +113,14 @@ public class TourController {
 	}
 	
 	@GetMapping("/tours/main")
-	public ResponseEntity<Object> mainTourList() {
-		System.out.println("main");
-		List<TourResponseDto> mainTourRecommendList = tourService.mainTourListByScore();
+	public ResponseEntity<Object> mainTourList(HttpSession httpSession) {
+		UserDto userDto = (UserDto) httpSession.getAttribute("userDto");
+		List<TourResponseDto> mainTourRecommendList = new ArrayList<>();
+		if (userDto == null) {
+			mainTourRecommendList = tourService.mainTourListByScore(0);
+		} else {
+			mainTourRecommendList = tourService.mainTourListByScore(userDto.getUserId());
+		}
 		return ResponseEntity.status(200).body(mainTourRecommendList);
 	}
 	

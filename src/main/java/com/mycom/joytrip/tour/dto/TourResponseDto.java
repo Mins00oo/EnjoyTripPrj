@@ -41,5 +41,7 @@ public class TourResponseDto {
 	private int contentTypeId;
 	
 	private int reviewCount;
+	
+	private boolean favorite;
 
 }

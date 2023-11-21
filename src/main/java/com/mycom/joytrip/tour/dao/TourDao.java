@@ -58,4 +58,12 @@ public interface TourDao {
 	List<TourSidoResponseDto> tourSidoList();
 	
 	List<TourGugunResponseDto> tourGugunList(int sidoCode);
+	
+	List<TourResponseDto> searchTourbyWordAndSido(TourParamDto tourParamDto);
+	
+	int searchTourByWordAndSidoCount(TourParamDto tourParamDto);
+	
+	List<TourResponseDto> searchTourByWordAndSidoByCategory(TourParamDto tourParamDto);
+	
+	int searchTourByWordAndSidoByCategoryCount(TourParamDto tourParamDto);
 }

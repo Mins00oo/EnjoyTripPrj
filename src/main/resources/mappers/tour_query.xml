@@ -74,7 +74,8 @@
 		    a.gugun_code,
 		    a.latitude,
 		    a.longitude,
-		    AVG(r.score) AS average_score -- 평균 점수 계산
+		    AVG(r.score) AS average_score, -- 평균 점수 계산
+		    COUNT(r.review_id) AS review_count
 		FROM
 		    attraction_info a 
 		LEFT JOIN 
@@ -103,7 +104,8 @@
 		    a.latitude,
 		    a.longitude,
 		    AVG(r.score) AS average_score,
-		    ad.overview
+		    ad.overview,
+		    COUNT(r.review_id) AS review_count
 		FROM
 		    attraction_info a
 		        LEFT JOIN
@@ -131,7 +133,8 @@
 		    a.latitude,
 		    a.longitude,
 		    AVG(r.score) AS average_score,
-		    ad.overview
+		    ad.overview,
+		    COUNT(r.review_id) AS review_count
 		FROM
 		    attraction_info a
 		        LEFT JOIN
@@ -139,9 +142,10 @@
 				LEFT JOIN
 			attraction_description ad ON a.content_id = ad.content_id
 		WHERE a.sido_code = #{sidoCode}
+		AND a.first_image != ''
 		GROUP BY a.content_id , a.title , a.addr1 , a.zipcode , a.first_image , a.first_image2 , a.readcount , a.sido_code , a.gugun_code , a.latitude , a.longitude
-		ORDER BY a.readcount DESC
-		LIMIT 3;
+		ORDER BY RAND() -- 무작위로 정렬
+		LIMIT 4;
 	</select>
 	
 	<select id="mainTourListByScore" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
@@ -158,7 +162,8 @@
 		    a.latitude,
 		    a.longitude,
 		    AVG(r.score) AS average_score,
-		    ad.overview
+		    ad.overview,
+		    COUNT(r.review_id) AS review_count
 		FROM
 		    attraction_info a
 		        LEFT JOIN
@@ -168,7 +173,7 @@
 		WHERE a.first_image != ''
 		GROUP BY a.content_id , a.title , a.addr1 , a.zipcode , a.first_image , a.first_image2 , a.readcount , a.sido_code , a.gugun_code , a.latitude , a.longitude
 		ORDER BY average_score desc
-		LIMIT 3;
+		LIMIT 6;
 	</select>
 	
 	<select id="tourRecommendList" parameterType="String" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
@@ -222,7 +227,8 @@
 		    a.gugun_code,
 		    a.latitude,
 		    a.longitude,
-		    AVG(r.score) AS average_score -- 평균 점수 계산
+		    AVG(r.score) AS average_score, -- 평균 점수 계산
+		    COUNT(r.review_id) AS review_count
 		FROM
 		    attraction_info a 
 		LEFT JOIN 
@@ -259,7 +265,8 @@
 		    a.latitude,
 		    a.longitude,
 		    AVG(r.score) AS average_score, -- 평균 점수 계산
-		    a.content_type_id
+		    a.content_type_id,
+		    COUNT(r.review_id) AS review_count
 		FROM
 		    attraction_info a 
 		LEFT JOIN 
@@ -296,7 +303,8 @@
 		    a.latitude,
 		    a.longitude,
 		    AVG(r.score) AS average_score, -- 평균 점수 계산
-		    a.content_type_id
+		    a.content_type_id,
+		    COUNT(r.review_id) AS review_count
 		FROM
 		    attraction_info a 
 		LEFT JOIN 
@@ -327,7 +335,8 @@
 		    a.latitude,
 		    a.longitude,
 		    AVG(r.score) AS average_score, -- 평균 점수 계산
-		    a.content_type_id
+		    a.content_type_id,
+		    COUNT(r.review_id) AS review_count
 		FROM
 		    attraction_info a 
 		LEFT JOIN 
@@ -355,7 +364,8 @@
 		    a.gugun_code,
 		    a.latitude,
 		    a.longitude,
-		    AVG(r.score) AS average_score -- 평균 점수 계산
+		    AVG(r.score) AS average_score, -- 평균 점수 계산
+		    COUNT(r.review_id) AS review_count
 		FROM
 		    attraction_info a 
 		LEFT JOIN 
@@ -395,7 +405,8 @@
 		    a.gugun_code,
 		    a.latitude,
 		    a.longitude,
-		    AVG(r.score) AS average_score -- 평균 점수 계산
+		    AVG(r.score) AS average_score, -- 평균 점수 계산
+		    COUNT(r.review_id) AS review_count
 		FROM
 		    attraction_info a 
 		LEFT JOIN 
@@ -427,7 +438,8 @@
 		    a.gugun_code,
 		    a.latitude,
 		    a.longitude,
-		    AVG(r.score) AS average_score -- 평균 점수 계산
+		    AVG(r.score) AS average_score, -- 평균 점수 계산
+		    COUNT(r.review_id) AS review_count
 		FROM
 		    attraction_info a 
 		LEFT JOIN 
@@ -458,6 +470,108 @@
 		    gugun
 		WHERE
 			sido_code = #{sidoCode}
+    </select>
+    
+   	<select id="searchTourbyWordAndSido" parameterType="map" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
+		SELECT 
+		    a.content_id,
+		    a.title,
+		    a.addr1,
+		    a.zipcode,
+		    a.first_image,
+		    a.first_image2,
+		    a.readcount,
+		    a.sido_code,
+		    a.gugun_code,
+		    a.latitude,
+		    a.longitude,
+		    AVG(r.score) AS average_score, -- 평균 점수 계산
+		    a.content_type_id,
+		    COUNT(r.review_id) AS review_count
+		FROM
+		    attraction_info a 
+		LEFT JOIN 
+		    review r ON a.content_id = r.content_id
+		WHERE
+		    (a.title LIKE CONCAT('%', #{searchWord}, '%') or a.addr1 LIKE CONCAT('%', #{searchWord}, '%'))
+		    	and
+		    a.sido_code = #{sidoCode}
+		    	and
+		    a.gugun_code = #{gugunCode}
+		GROUP BY
+		    a.content_id, a.title, a.addr1, a.zipcode, a.first_image, a.first_image2,
+		    a.readcount, a.sido_code, a.gugun_code, a.latitude, a.longitude
+		ORDER BY
+			${option} ${how}
+        LIMIT #{limit} OFFSET #{offset}
+	</select>
+	
+    <select id="searchTourByWordAndSidoCount" parameterType="map" resultType="int">
+		SELECT 
+		    COUNT(*) AS result_count
+		FROM
+		    attraction_info a 
+		LEFT JOIN 
+		    review r ON a.content_id = r.content_id
+		WHERE
+		    (a.title LIKE CONCAT('%', #{searchWord}, '%') or a.addr1 LIKE CONCAT('%', #{searchWord}, '%'))
+		    and
+		    a.sido_code = #{sidoCode}
+		    and
+		    a.gugun_code = #{gugunCode}
+    </select>
+    
+   	<select id="searchTourByWordAndSidoByCategory" parameterType="map" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
+		SELECT 
+		    a.content_id,
+		    a.title,
+		    a.addr1,
+		    a.zipcode,
+		    a.first_image,
+		    a.first_image2,
+		    a.readcount,
+		    a.sido_code,
+		    a.gugun_code,
+		    a.latitude,
+		    a.longitude,
+		    AVG(r.score) AS average_score, -- 평균 점수 계산
+		    a.content_type_id,
+		    COUNT(r.review_id) AS review_count
+		FROM
+		    attraction_info a 
+		LEFT JOIN 
+		    review r ON a.content_id = r.content_id
+		WHERE
+		    (a.title LIKE CONCAT('%', #{searchWord}, '%') or a.addr1 LIKE CONCAT('%', #{searchWord}, '%'))
+		    	and
+		    a.sido_code = #{sidoCode}
+		    	and
+		    a.gugun_code = #{gugunCode}
+		    	and 
+		    a.content_type_id = #{category}
+		GROUP BY
+		    a.content_id, a.title, a.addr1, a.zipcode, a.first_image, a.first_image2,
+		    a.readcount, a.sido_code, a.gugun_code, a.latitude, a.longitude
+		ORDER BY
+			${option} ${how}
+        LIMIT #{limit} OFFSET #{offset}
+	</select>
+	
+    <select id="searchTourByWordAndSidoByCategoryCount" parameterType="map" resultType="int">
+		SELECT 
+		    COUNT(*) AS result_count
+		FROM
+		    attraction_info a 
+		LEFT JOIN 
+		    review r ON a.content_id = r.content_id
+		WHERE
+		    (a.title LIKE CONCAT('%', #{searchWord}, '%') or a.addr1 LIKE CONCAT('%', #{searchWord}, '%'))
+		    and
+		    a.sido_code = #{sidoCode}
+		    and
+		    a.gugun_code = #{gugunCode}
+		    	and
+		    a.content_type_id = #{category}
     </select>
 </mapper>
 
