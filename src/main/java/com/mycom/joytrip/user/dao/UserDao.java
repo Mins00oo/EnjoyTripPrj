@@ -17,4 +17,5 @@ public interface UserDao {
 	int delete(int userId);
 	UserDto detailByEmail(String userEmail);
 	int updateUserPwBeforeLogin(UserDto userDto);
+	int updateUserPwAfterLogin(UserDto userDto);
 }

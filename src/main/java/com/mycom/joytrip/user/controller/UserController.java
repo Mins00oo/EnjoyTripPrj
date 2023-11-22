@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -67,9 +69,9 @@ public class UserController {
 	}
 	
 	@PutMapping(value="/users/pw")
-	public Map<String, String> changeUserPw(@RequestBody UserDto userDto){
+	public Map<String, String> changeUserPw(@RequestBody UserDto userDto, HttpSession session){
 		Map<String, String> map = new HashMap<>();
-		userService.updateUserPw(userDto);
+		userService.updateUserPw(userDto, session);
 		map.put("result", "success");
 		return map;
 	}
