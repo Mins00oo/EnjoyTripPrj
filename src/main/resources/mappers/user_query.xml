@@ -53,6 +53,10 @@
 	    where user_id = #{userId}
 	</update>
 
-	
+	<update id="updateUserPwAfterLogin" parameterType="com.mycom.joytrip.user.dto.UserDto">
+		update user
+		   set user_password 	= #{userPassword}
+		 where user_id 	= #{userId}
+	</update>
 	
 </mapper>

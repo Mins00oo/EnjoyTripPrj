@@ -2,6 +2,8 @@ package com.mycom.joytrip.user.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,9 +69,17 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public int updateUserPw(UserDto userDto) {
+	public int updateUserPw(UserDto userDto, HttpSession session) {
+		System.out.println(userDto);
+		UserDto user = (UserDto) session.getAttribute("userDto");
 		String hashpw = BCrypt.hashpw(userDto.getUserPassword(), BCrypt.gensalt());
 		userDto.setUserPassword(hashpw);
+		
+		if (user != null) {
+			userDto.setUserId(user.getUserId());
+			System.out.println("로그인 하고 비번 수정" + userDto);
+			return userDao.updateUserPwAfterLogin(userDto);
+		} 
 		return userDao.updateUserPwBeforeLogin(userDto);
 	}
 
