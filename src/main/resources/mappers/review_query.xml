@@ -116,6 +116,22 @@
 		WHERE
 		    r.content_id = #{contentId}
     </select>
+    
+    <select id="myVisitedCount" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+		FROM
+		    visited
+		WHERE
+		    user_id = #{userId}
+    </select>
+    
+    <select id="myReviewCount" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+		FROM
+		   review r
+		WHERE
+		   r.user_id = #{userId}
+    </select>
 </mapper>
 
 

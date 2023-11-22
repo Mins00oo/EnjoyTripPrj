@@ -20,5 +20,6 @@ public interface BoardDao {
 	List<BoardResponseDto> boardListSearchWord(BoardParamDto boardParamDto);
 	int boardListTotalCount();
 	int boardListSearchWordTotalCount(BoardParamDto boardParamDto);
+	int myBoardCount(int userId);
 }    
    

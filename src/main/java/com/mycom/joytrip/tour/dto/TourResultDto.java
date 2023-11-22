@@ -21,4 +21,6 @@ public class TourResultDto {
 	private List<TourSidoResponseDto> sidoList;
 	
 	private List<TourGugunResponseDto> gugunList;
+	
+	private boolean isLogin;
 }

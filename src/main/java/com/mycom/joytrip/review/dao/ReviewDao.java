@@ -27,5 +27,8 @@ public interface ReviewDao {
 	
 	int tourReviewCount(int contentId);
 	
+	int myVisitedCount(int userId);
+	
+	int myReviewCount(int userId);
 	
 }

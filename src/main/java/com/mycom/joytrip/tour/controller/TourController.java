@@ -36,21 +36,33 @@ public class TourController {
 	@GetMapping("/tours")
 	public ResponseEntity<Object> tourList(TourParamDto tourParamDto, HttpSession session) {
 		System.out.println(tourParamDto);
-		TourResultDto tourResultDto;
+		TourResultDto tourResultDto = new TourResultDto();
 		
 		UserDto userDto = (UserDto) session.getAttribute("userDto");
 		
+		if (userDto == null) {
+			tourResultDto.setLogin(false);
+		} else {
+			tourResultDto.setLogin(true);
+		}
+		
 		if (!tourParamDto.getSidoCode().isEmpty()) {
+			TourResultDto result = new TourResultDto();
+			if (userDto == null) {
+				result.setLogin(false);
+			} else {
+				result.setLogin(true);
+			}
 			// 시도 + 구군으로 검색한 결과 조회
 			if (!tourParamDto.getCategory().isEmpty() && !tourParamDto.getOption().isEmpty()) {
 				// 카테고리 분류 + 정렬
-				TourResultDto result = tourService.searchTourByWordAndSidoByCategory(tourParamDto, userDto);
+				result = tourService.searchTourByWordAndSidoByCategory(tourParamDto, userDto);
 				return ResponseEntity.status(200).body(result);
 			} else if (!tourParamDto.getCategory().isEmpty()) {
-				TourResultDto result = tourService.searchTourByWordAndSidoByCategory(tourParamDto, userDto);
+				result = tourService.searchTourByWordAndSidoByCategory(tourParamDto, userDto);
 				return ResponseEntity.status(200).body(result);
 			} else {
-				TourResultDto result = tourService.searchTourbyWordAndSido(tourParamDto, userDto);
+				result = tourService.searchTourbyWordAndSido(tourParamDto, userDto);
 				return ResponseEntity.status(200).body(result);
 			}
 		}
@@ -120,12 +132,17 @@ public class TourController {
 	public ResponseEntity<Object> mainTourList(HttpSession httpSession) {
 		UserDto userDto = (UserDto) httpSession.getAttribute("userDto");
 		List<TourResponseDto> mainTourRecommendList = new ArrayList<>();
+		TourResultDto tourResultDto = new TourResultDto();
 		if (userDto == null) {
 			mainTourRecommendList = tourService.mainTourListByScore(0);
+			tourResultDto.setList(mainTourRecommendList);
+			tourResultDto.setLogin(false);  
 		} else {
 			mainTourRecommendList = tourService.mainTourListByScore(userDto.getUserId());
+			tourResultDto.setList(mainTourRecommendList);
+			tourResultDto.setLogin(true);
 		}
-		return ResponseEntity.status(200).body(mainTourRecommendList);
+		return ResponseEntity.status(200).body(tourResultDto);
 	}
 	
 	@GetMapping("/tours/sido")
