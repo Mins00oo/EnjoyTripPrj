@@ -1,5 +1,7 @@
 package com.mycom.joytrip.user.dto;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,15 +13,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class UserDto {
-	int userId;
-	String userPassword;
-	String userEmail;
-	String userName;
-	String userNickname;
-	int visitedCount;
-	int reviewCount;
-	int boardCount;
-	int starCount;
-	String userDescription;
+public class UserResultDto {
+	private List<UserDto> list;
+	
+	private UserDto userDto;
 }

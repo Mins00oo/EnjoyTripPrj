@@ -3,6 +3,7 @@ package com.mycom.joytrip.user.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.mycom.joytrip.user.dto.UserDto;
 
@@ -18,4 +19,5 @@ public interface UserDao {
 	UserDto detailByEmail(String userEmail);
 	int updateUserPwBeforeLogin(UserDto userDto);
 	int updateUserPwAfterLogin(UserDto userDto);
+	List<UserDto> searchByNicknameOrEmail(String searchWord);
 }

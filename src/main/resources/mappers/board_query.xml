@@ -61,4 +61,8 @@
           FROM BOARD
          WHERE board_title LIKE CONCAT('%', #{searchWord} ,'%')
     </select>
+    
+    <select id="myBoardCount" parameterType="int" resultType="int">
+        SELECT COUNT(*) FROM BOARD WHERE user_id = #{userId}
+    </select>
 </mapper>

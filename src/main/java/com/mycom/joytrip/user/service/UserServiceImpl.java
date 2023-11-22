@@ -8,15 +8,29 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mycom.joytrip.board.dao.BoardDao;
 import com.mycom.joytrip.common.exception.CustomInsertException;
+import com.mycom.joytrip.mytrip.dao.MytripDao;
+import com.mycom.joytrip.review.dao.ReviewDao;
+import com.mycom.joytrip.star.dao.StarDao;
 import com.mycom.joytrip.user.dao.UserDao;
 import com.mycom.joytrip.user.dto.UserDto;
+import com.mycom.joytrip.user.dto.UserResultDto;
 
 @Service
 public class UserServiceImpl implements UserService{	
 	
 	@Autowired
 	UserDao userDao;
+	
+	@Autowired
+	ReviewDao reviewDao;
+	
+	@Autowired
+	BoardDao boardDao;
+	
+	@Autowired
+	StarDao starDao;
 	
 	@Override
 	public UserDto userLogin(UserDto userDto) {
@@ -35,7 +49,18 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public UserDto detail(int studentId) {
-		return userDao.detail(studentId);
+		UserDto dto = userDao.detail(studentId);
+		int visitedCount = reviewDao.myVisitedCount(studentId);
+		int reviewCount = reviewDao.myReviewCount(studentId);
+		int boardCount = boardDao.myBoardCount(studentId);
+		int starCount = starDao.myStarCount(studentId);
+		
+		dto.setBoardCount(boardCount);
+		dto.setReviewCount(reviewCount);
+		dto.setVisitedCount(visitedCount);
+		dto.setStarCount(starCount);
+		
+		return dto;
 	}
 
 	@Override
@@ -70,17 +95,27 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public int updateUserPw(UserDto userDto, HttpSession session) {
-		System.out.println(userDto);
 		UserDto user = (UserDto) session.getAttribute("userDto");
 		String hashpw = BCrypt.hashpw(userDto.getUserPassword(), BCrypt.gensalt());
-		userDto.setUserPassword(hashpw);
 		
 		if (user != null) {
+			if (BCrypt.checkpw(userDto.getUserPassword(), userDao.detail(user.getUserId()).getUserPassword())) {
+				throw new CustomInsertException("기존과 동일한 비밀번호입니다!");
+			}
+			userDto.setUserPassword(hashpw);
 			userDto.setUserId(user.getUserId());
-			System.out.println("로그인 하고 비번 수정" + userDto);
 			return userDao.updateUserPwAfterLogin(userDto);
 		} 
+		userDto.setUserPassword(hashpw);
 		return userDao.updateUserPwBeforeLogin(userDto);
+	}
+
+	@Override
+	public UserResultDto searchByNicknameOrEmail(String searchWord) {
+		UserResultDto userResultDto = new UserResultDto();
+		List<UserDto> list = userDao.searchByNicknameOrEmail(searchWord);
+		userResultDto.setList(list);
+		return userResultDto;
 	}
 
 }

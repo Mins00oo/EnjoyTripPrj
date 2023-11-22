@@ -47,6 +47,14 @@
 		WHERE
 		    s.user_id = #{userId} and s.content_id = #{contentId}
 	</select>
+	
+    <select id="myStarCount" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+		FROM
+		   star s
+		WHERE
+		   s.user_id = #{userId}
+    </select>
 </mapper>
 
 
