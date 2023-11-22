@@ -17,6 +17,7 @@
 		FROM
 		    attraction_info a
 		WHERE
+			a.first_image != '' and
 		    (a.title LIKE CONCAT('%', #{searchWord}, '%') or a.addr1 LIKE CONCAT('%', #{searchWord}, '%'))
         LIMIT #{limit} OFFSET #{offset}
 	</select>

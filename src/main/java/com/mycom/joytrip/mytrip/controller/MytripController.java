@@ -65,8 +65,8 @@ public class MytripController {
 		return service.delete(dto);
 	}
 	
-	@DeleteMapping(value="/delete/mytrips/tour/{mytripId}/{contentId}")
-	int deleteTour(@PathVariable int mytripId, int contentId) {
+	@DeleteMapping(value="/mytrips/tour/{mytripId}/{contentId}")
+	int deleteTour(@PathVariable int mytripId, @PathVariable int contentId) {
 		MytripTourDto dto = new MytripTourDto();
 		dto.setMytripId(mytripId);
 		dto.setContentId(contentId);
