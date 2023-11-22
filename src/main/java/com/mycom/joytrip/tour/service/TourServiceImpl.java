@@ -3,6 +3,8 @@ package com.mycom.joytrip.tour.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ import com.mycom.joytrip.tour.dto.TourParamDto;
 import com.mycom.joytrip.tour.dto.TourResponseDto;
 import com.mycom.joytrip.tour.dto.TourResultDto;
 import com.mycom.joytrip.tour.dto.TourSidoResponseDto;
+import com.mycom.joytrip.user.dto.UserDto;
 
 @Service
 public class TourServiceImpl implements TourService {
@@ -54,7 +57,7 @@ public class TourServiceImpl implements TourService {
 	}
 
 	@Override
-	public TourResultDto tourList(TourParamDto tourParamDto) {
+	public TourResultDto tourList(TourParamDto tourParamDto, UserDto userDto) {
 		TourResultDto tourResultDto = new TourResultDto();
 		int count = tourDao.tourListTotalCount();
 		List<TourResponseDto> list = new ArrayList<>();
@@ -68,6 +71,16 @@ public class TourServiceImpl implements TourService {
 		for (TourResponseDto tourResponseDto : list) {
 			int reviewCount = reviewDao.tourReviewCount(tourResponseDto.getContentId());
 			tourResponseDto.setReviewCount(reviewCount);
+			if (userDto == null) {
+				tourResponseDto.setFavorite(false);
+			} else {
+				if (stardDao.retriveMyStar(userDto.getUserId(), tourResponseDto.getContentId()) == null) {
+					tourResponseDto.setFavorite(false);
+				} else {
+					tourResponseDto.setFavorite(true);
+				}
+				
+			}
 		}
 		
 		tourResultDto.setList(list);
@@ -82,18 +95,23 @@ public class TourServiceImpl implements TourService {
 	}
 
 	@Override
-	public TourDetailResponseDto tourDetail(int userId, int contentId) {
+	public TourDetailResponseDto tourDetail(UserDto userDto, int contentId) {
 		TourDetailResponseDto tourDetail = tourDao.tourDetail(contentId);
 		
 		List<ReviewResponseDto> reviewResponseDtos = reviewDao.retriveContentReviewList(contentId);
 		tourDetail.setReviewResponseDtos(reviewResponseDtos);
 		
-		StarResponseDto isFavorite = stardDao.retriveMyStar(userId, contentId);
-		if (isFavorite == null) {
+		if (userDto == null) {
 			tourDetail.setFavorite(false);
 		} else {
-			tourDetail.setFavorite(true);
+			StarResponseDto isFavorite = stardDao.retriveMyStar(userDto.getUserId(), contentId);
+			if (isFavorite == null) {
+				tourDetail.setFavorite(false);
+			} else {
+				tourDetail.setFavorite(true);
+			}
 		}
+
 		return tourDetail;
 	}
 
@@ -108,19 +126,57 @@ public class TourServiceImpl implements TourService {
 	}
 
 	@Override
-	public List<TourResponseDto> tourRelateList(int contentId) {
+	public TourResultDto tourRelateList(int contentId, UserDto userDto) {
+		TourResultDto tourResultDto = new TourResultDto();
 		TourDetailResponseDto tourDetail = tourDao.tourDetail(contentId);
 		int sidoCode = tourDetail.getSidoCode();
-		return tourDao.tourRelateList(sidoCode);
+		List<TourResponseDto> list = tourDao.tourRelateList(sidoCode);
+		
+		for (TourResponseDto tourResponseDto : list) {
+			int reviewCount = reviewDao.tourReviewCount(tourResponseDto.getContentId());
+			tourResponseDto.setReviewCount(reviewCount);
+			
+			if (userDto == null) {
+				tourResponseDto.setFavorite(false);
+			} else {
+				if (stardDao.retriveMyStar(userDto.getUserId(), tourResponseDto.getContentId()) == null) {
+					tourResponseDto.setFavorite(false);
+				} else {
+					tourResponseDto.setFavorite(true);
+				}	
+			}
+		}
+		
+		tourResultDto.setList(list);
+		
+		return tourResultDto;
 	}
 
 	@Override
-	public List<TourResponseDto> mainTourListByScore() {
-		return tourDao.mainTourListByScore();
+	public List<TourResponseDto> mainTourListByScore(int userId) {
+		List<TourResponseDto> list = new ArrayList<>();
+		if (userId == 0) {
+			// 로그인 하지 않은 상태
+			list = tourDao.mainTourListByScore();
+			for (TourResponseDto tour : list) {
+				tour.setFavorite(false);
+			}
+			return list;
+		} 
+		list = tourDao.mainTourListByScore();
+		
+		for (TourResponseDto tour : list) {
+			if (stardDao.retriveMyStar(userId, tour.getContentId()) != null) {
+				tour.setFavorite(true);
+			} else {
+				tour.setFavorite(false);
+			}
+		}
+		return list;
 	}
 
 	@Override
-	public TourResultDto tourRegionList(TourParamDto tourParamDto) {
+	public TourResultDto tourRegionList(TourParamDto tourParamDto, UserDto userDto) {
 		TourResultDto tourResultDto = new TourResultDto();
 		List<TourResponseDto> list = new ArrayList<>();
 		int count = 0;
@@ -147,6 +203,17 @@ public class TourServiceImpl implements TourService {
 		for (TourResponseDto tourResponseDto : list) {
 			int reviewCount = reviewDao.tourReviewCount(tourResponseDto.getContentId());
 			tourResponseDto.setReviewCount(reviewCount);
+			
+			if (userDto == null) {
+				tourResponseDto.setFavorite(false);
+			} else {
+				if (stardDao.retriveMyStar(userDto.getUserId(), tourResponseDto.getContentId()) == null) {
+					tourResponseDto.setFavorite(false);
+				} else {
+					tourResponseDto.setFavorite(true);
+				}
+				
+			}
 		}
 		
 		tourResultDto.setList(list);
@@ -156,7 +223,7 @@ public class TourServiceImpl implements TourService {
 	}
 
 	@Override
-	public TourResultDto tourListByCategory(TourParamDto tourParamDto) {
+	public TourResultDto tourListByCategory(TourParamDto tourParamDto, UserDto userDto) {
 		TourResultDto tourResultDto = new TourResultDto();
 		List<TourResponseDto> list = new ArrayList<>();
 		int count = tourDao.tourListByCategoryCount(tourParamDto);
@@ -170,10 +237,19 @@ public class TourServiceImpl implements TourService {
 			
 		}
 		
-		System.out.println(list);
 		for (TourResponseDto tourResponseDto : list) {
 			int reviewCount = reviewDao.tourReviewCount(tourResponseDto.getContentId());
 			tourResponseDto.setReviewCount(reviewCount);
+			if (userDto == null) {
+				tourResponseDto.setFavorite(false);
+			} else {
+				if (stardDao.retriveMyStar(userDto.getUserId(), tourResponseDto.getContentId()) == null) {
+					tourResponseDto.setFavorite(false);
+				} else {
+					tourResponseDto.setFavorite(true);
+				}
+				
+			}
 		}
 		
 		tourResultDto.setList(list);
@@ -197,6 +273,61 @@ public class TourServiceImpl implements TourService {
 		TourResultDto tourResultDto = new TourResultDto();
 		
 		tourResultDto.setGugunList(list);
+		return tourResultDto;
+	}
+
+	@Override
+	public TourResultDto searchTourbyWordAndSido(TourParamDto tourParamDto, UserDto userDto) {
+		List<TourResponseDto> list = tourDao.searchTourbyWordAndSido(tourParamDto);
+		int count = tourDao.searchTourByWordAndSidoCount(tourParamDto);
+		
+		TourResultDto tourResultDto = new TourResultDto();
+		
+		for (TourResponseDto tourResponseDto : list) {
+			int reviewCount = reviewDao.tourReviewCount(tourResponseDto.getContentId());
+			tourResponseDto.setReviewCount(reviewCount);
+			if (userDto == null) {
+				tourResponseDto.setFavorite(false);
+			} else {
+				if (stardDao.retriveMyStar(userDto.getUserId(), tourResponseDto.getContentId()) == null) {
+					tourResponseDto.setFavorite(false);
+				} else {
+					tourResponseDto.setFavorite(true);
+				}
+				
+			}
+		}
+		
+		tourResultDto.setCount(count);
+		tourResultDto.setList(list);
+		
+		return tourResultDto;
+	}
+
+	@Override
+	public TourResultDto searchTourByWordAndSidoByCategory(TourParamDto tourParamDto, UserDto userDto) {
+		TourResultDto tourResultDto = new TourResultDto();
+		
+		List<TourResponseDto> list = tourDao.searchTourByWordAndSidoByCategory(tourParamDto);
+		int count = tourDao.searchTourByWordAndSidoByCategoryCount(tourParamDto);
+
+		for (TourResponseDto tourResponseDto : list) {
+			int reviewCount = reviewDao.tourReviewCount(tourResponseDto.getContentId());
+			tourResponseDto.setReviewCount(reviewCount);
+			if (userDto == null) {
+				tourResponseDto.setFavorite(false);
+			} else {
+				if (stardDao.retriveMyStar(userDto.getUserId(), tourResponseDto.getContentId()) == null) {
+					tourResponseDto.setFavorite(false);
+				} else {
+					tourResponseDto.setFavorite(true);
+				}
+				
+			}
+		}
+		
+		tourResultDto.setList(list);
+		tourResultDto.setCount(count);
 		return tourResultDto;
 	}
 	

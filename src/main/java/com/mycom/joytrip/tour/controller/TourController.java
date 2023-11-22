@@ -1,5 +1,6 @@
 package com.mycom.joytrip.tour.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -33,37 +34,54 @@ public class TourController {
 	}
 	
 	@GetMapping("/tours")
-	public ResponseEntity<Object> tourList(TourParamDto tourParamDto) {
+	public ResponseEntity<Object> tourList(TourParamDto tourParamDto, HttpSession session) {
 		System.out.println(tourParamDto);
 		TourResultDto tourResultDto;
 		
+		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		
+		if (!tourParamDto.getSidoCode().isEmpty()) {
+			// 시도 + 구군으로 검색한 결과 조회
+			if (!tourParamDto.getCategory().isEmpty() && !tourParamDto.getOption().isEmpty()) {
+				// 카테고리 분류 + 정렬
+				TourResultDto result = tourService.searchTourByWordAndSidoByCategory(tourParamDto, userDto);
+				return ResponseEntity.status(200).body(result);
+			} else if (!tourParamDto.getCategory().isEmpty()) {
+				TourResultDto result = tourService.searchTourByWordAndSidoByCategory(tourParamDto, userDto);
+				return ResponseEntity.status(200).body(result);
+			} else {
+				TourResultDto result = tourService.searchTourbyWordAndSido(tourParamDto, userDto);
+				return ResponseEntity.status(200).body(result);
+			}
+		}
+		
 		if (!tourParamDto.getCategory().isEmpty() && tourParamDto.getRegion().isEmpty()) {
 			// 카테고리별 분류
-			tourResultDto = tourService.tourListByCategory(tourParamDto);
-			System.out.println(tourResultDto);
+			tourResultDto = tourService.tourListByCategory(tourParamDto, userDto);
 			return ResponseEntity.status(200).body(tourResultDto);
 		}
 		
 		if (!tourParamDto.getRegion().isEmpty()) {
 			// 지역별 검색 => 카테고리 + 정렬 가능
-			tourResultDto = tourService.tourRegionList(tourParamDto);
+			tourResultDto = tourService.tourRegionList(tourParamDto, userDto);
 			return ResponseEntity.status(200).body(tourResultDto);
 		} 
 		
         if( tourParamDto.getSearchWord().isEmpty() ) {
-        	tourResultDto = tourService.tourList(tourParamDto);
+        	tourResultDto = tourService.tourList(tourParamDto, userDto);
         }else {
         	tourResultDto = tourService.searchTourbyWord(tourParamDto);
         }
-        System.out.println(tourResultDto);
 		return ResponseEntity.status(200).body(tourResultDto);
 	}
 	
 	@GetMapping("/tours/region/{region}")
-	public ResponseEntity<Object> tourRegionList(@PathVariable String region, TourParamDto tourParamDto) {
+	public ResponseEntity<Object> tourRegionList(@PathVariable String region, TourParamDto tourParamDto, HttpSession session) {
 		TourResultDto tourResultDto;
+		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		
         if( tourParamDto.getSearchWord().isEmpty() ) {
-        	tourResultDto = tourService.tourList(tourParamDto);
+        	tourResultDto = tourService.tourList(tourParamDto, userDto);
         }else {
         	tourResultDto = tourService.searchTourbyWord(tourParamDto);
         }
@@ -73,8 +91,8 @@ public class TourController {
 
 	@GetMapping("/tours/{contentId}")
 	public ResponseEntity<Object> tourDetail(@PathVariable int contentId, HttpSession session) {
-//		UserDto userDto = (UserDto) session.getAttribute("userDto");
-		TourDetailResponseDto tourDetail = tourService.tourDetail(1, contentId);
+		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		TourDetailResponseDto tourDetail = tourService.tourDetail(userDto, contentId);
 		return ResponseEntity.status(200).body(tourDetail);
 	}
 	
@@ -92,16 +110,21 @@ public class TourController {
 	}
 	
 	@GetMapping("/tours/relate/{contentId}")
-	public ResponseEntity<Object> relateTourList(@PathVariable int contentId) {
-		System.out.println(contentId);
-		List<TourResponseDto> relatedList = tourService.tourRelateList(contentId);
-		return ResponseEntity.status(200).body(relatedList);
+	public ResponseEntity<Object> relateTourList(@PathVariable int contentId, HttpSession session) {
+		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		TourResultDto list = tourService.tourRelateList(contentId, userDto);
+		return ResponseEntity.status(200).body(list);
 	}
 	
 	@GetMapping("/tours/main")
-	public ResponseEntity<Object> mainTourList() {
-		System.out.println("main");
-		List<TourResponseDto> mainTourRecommendList = tourService.mainTourListByScore();
+	public ResponseEntity<Object> mainTourList(HttpSession httpSession) {
+		UserDto userDto = (UserDto) httpSession.getAttribute("userDto");
+		List<TourResponseDto> mainTourRecommendList = new ArrayList<>();
+		if (userDto == null) {
+			mainTourRecommendList = tourService.mainTourListByScore(0);
+		} else {
+			mainTourRecommendList = tourService.mainTourListByScore(userDto.getUserId());
+		}
 		return ResponseEntity.status(200).body(mainTourRecommendList);
 	}
 	

@@ -7,6 +7,7 @@ import com.mycom.joytrip.tour.dto.TourDetailResponseDto;
 import com.mycom.joytrip.tour.dto.TourParamDto;
 import com.mycom.joytrip.tour.dto.TourResponseDto;
 import com.mycom.joytrip.tour.dto.TourResultDto;
+import com.mycom.joytrip.user.dto.UserDto;
 
 public interface TourService {
 	TourResultDto searchTourbyWord(TourParamDto tourParamDto);
@@ -15,23 +16,27 @@ public interface TourService {
 	
 	List<TourResponseDto> orderTourList(String order);
 	
-	TourResultDto tourList(TourParamDto tourParamDto);
+	TourResultDto tourList(TourParamDto tourParamDto, UserDto userDto);
 
-	TourDetailResponseDto tourDetail(int userId, int contentId);
+	TourDetailResponseDto tourDetail(UserDto userDto, int contentId);
 	
 	List<CheckResponseDto> retrieveUserCheckList(int userId);
 	
 	List<TourResponseDto> tourRecommendList();
 	
-	List<TourResponseDto> tourRelateList(int contentId);
+	TourResultDto tourRelateList(int contentId, UserDto userDto);
 	
-	List<TourResponseDto> mainTourListByScore();
+	List<TourResponseDto> mainTourListByScore(int userId);
 	
-	TourResultDto tourRegionList(TourParamDto tourParamDto);
+	TourResultDto tourRegionList(TourParamDto tourParamDto, UserDto userDto);
 	
-	TourResultDto tourListByCategory(TourParamDto tourParamDto);
+	TourResultDto tourListByCategory(TourParamDto tourParamDto, UserDto userDto);
 	
 	TourResultDto tourSidoList();
 	
 	TourResultDto tourGugunList(int sidoCode);
+	
+	TourResultDto searchTourbyWordAndSido(TourParamDto tourParamDto, UserDto userDto);
+	
+	TourResultDto searchTourByWordAndSidoByCategory(TourParamDto tourParamDto, UserDto userDto);
 }

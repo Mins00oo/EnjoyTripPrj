@@ -20,7 +20,6 @@ import com.mycom.joytrip.star.service.StarService;
 import com.mycom.joytrip.user.dto.UserDto;
 
 @RestController
-@CrossOrigin(originPatterns = "*", allowedHeaders = "*")
 public class StarController {
 	
 	@Autowired
@@ -47,8 +46,8 @@ public class StarController {
 	
 	@DeleteMapping("/tours/stars/{contentId}")
 	public ResponseEntity<Object> deleteMyStar(@PathVariable int contentId, HttpSession session) {
-//		UserDto userDto = (UserDto) session.getAttribute("userDto");
-		starService.deleteStar(1, contentId);
+		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		starService.deleteStar(userDto.getUserId(), contentId);
 		return ResponseEntity.status(200).body("즐겨찾기 삭제가 완료되었습니다.");
 	}
 	
