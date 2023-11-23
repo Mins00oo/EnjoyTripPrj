@@ -6,6 +6,13 @@
 		VALUES (#{userId}, #{contentId}, #{content}, #{score});
 	</insert>
 	
+	<update id="update" parameterType="com.mycom.joytrip.review.dto.ReviewRequestDto">
+		update review
+   		   set content = #{content},
+       		   score = #{score}
+ 		 where review_id = #{reviewId};
+	</update>
+	
 	<select id="retrieveMyReviewList" parameterType="int" resultType="com.mycom.joytrip.review.dto.ReviewResponseDto">
 		SELECT 
 		    r.review_id,

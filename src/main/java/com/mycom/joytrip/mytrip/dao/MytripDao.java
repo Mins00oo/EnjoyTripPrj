@@ -12,7 +12,7 @@ import com.mycom.joytrip.mytrip.dto.MytripTourDto;
 public interface MytripDao {
 	String getTitle(int mytripId);							//공유를 위한 제목 조회
 	List<MytripResponseDto> mytripList(int userId);			//사용자가 보유한 마이트립 리스트
-	List<MytripResponseDto> mytripDetail(int mytripId);		//마이트립에 담긴 관광지 리스트 
+	List<MytripResponseDto> mytripDetail(MytripRequestDto dto);		//마이트립에 담긴 관광지 리스트 
 	int insert(MytripRequestDto dto);						//마이트립 생성
 	int share(MytripRequestDto dto);						//다른 사용자에게 공유
 	int insertTour(MytripTourDto dto);						//마이트립에 관광지 추가

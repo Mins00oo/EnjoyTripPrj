@@ -18,7 +18,7 @@
 	</select>
 	
 	<!-- 개별 마이트립에 대한 관광지 리스트 조회 -->
-	<select id="mytripDetail" resultType="com.mycom.joytrip.mytrip.dto.MytripResponseDto">
+	<select id="mytripDetail" parameterType="com.mycom.joytrip.mytrip.dto.MytripRequestDto" resultType="com.mycom.joytrip.mytrip.dto.MytripResponseDto">
         select mi.mytrip_id, mi.title, md.content_id, ai.latitude, ai.longitude, ai.title as content_title
 		  from mytrip_info mi 
 		  left join mytrip_detail md on mi.mytrip_id = md.mytrip_id

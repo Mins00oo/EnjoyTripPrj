@@ -10,5 +10,7 @@ public interface ReviewService {
 	
 	List<ReviewResponseDto> retrieveMyReviewList(int userId);
 	
+	int updateReview(ReviewRequestDto reviewRequestDto);
+	
 	int deleteReview(int reviewId);
 }

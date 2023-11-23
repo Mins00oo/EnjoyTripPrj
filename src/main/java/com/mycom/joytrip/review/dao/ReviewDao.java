@@ -25,6 +25,8 @@ public interface ReviewDao {
 	
 	ReviewResponseDto retriveMyTourReview(@Param("userId") int userId, @Param("contentId") int contentId);
 	
+	int updateReview(ReviewRequestDto reviewRequestDto);
+	
 	int tourReviewCount(int contentId);
 	
 	
