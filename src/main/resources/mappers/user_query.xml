@@ -9,7 +9,7 @@
 	</select>
 	
 	<select id="detail" parameterType="int" resultType="com.mycom.joytrip.user.dto.UserDto">
-		select user_id, user_password, user_email, user_name, user_nickname
+		select user_id, user_password, user_email, user_name, user_nickname, user_description
 		  from user 
 		 where user_id = #{userId}
 	</select>
@@ -35,6 +35,7 @@
 		   set user_email		= #{userEmail}
 		   	  ,user_name		= #{userName}
 		   	  ,user_nickname	= #{userNickname}
+		   	  ,user_description = #{userDescription}
 		 where user_id 	= #{userId}
 	</update>
 	
@@ -53,6 +54,15 @@
 	    where user_id = #{userId}
 	</update>
 
+	<update id="updateUserPwAfterLogin" parameterType="com.mycom.joytrip.user.dto.UserDto">
+		update user
+		   set user_password 	= #{userPassword}
+		 where user_id 	= #{userId}
+	</update>
 	
-	
+	<select id="searchByNicknameOrEmail" parameterType="string" resultType="com.mycom.joytrip.user.dto.UserDto">
+		select user_id, user_email, user_name, user_nickname, user_description
+		  from user 
+		 where user_email = #{searchWord} or user_nickname = #{searchWord}
+	</select>
 </mapper>

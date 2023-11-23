@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mycom.joytrip.common.exception.CustomInsertException;
 import com.mycom.joytrip.mytrip.dao.MytripDao;
 import com.mycom.joytrip.mytrip.dto.MytripRequestDto;
 import com.mycom.joytrip.mytrip.dto.MytripResponseDto;
@@ -33,10 +34,17 @@ public class MytripSeviceImpl implements MytripService{
 	}
 
 	@Override
+	@Transactional
 	public int share(MytripRequestDto dto) {
 		String title = dao.getTitle(dto.getMytripId());
 		dto.setTitle(title);
-		return dao.share(dto);
+		int share;
+		try {
+			share = dao.share(dto);
+		} catch (Exception e) {
+			throw new CustomInsertException("이미 공유한 항목입니다!");
+		}
+		return share; 
 	}
 
 	@Override

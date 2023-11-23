@@ -17,7 +17,6 @@ import com.mycom.joytrip.tour.dto.TourDetailResponseDto;
 import com.mycom.joytrip.tour.dto.TourParamDto;
 import com.mycom.joytrip.tour.dto.TourResponseDto;
 import com.mycom.joytrip.tour.dto.TourResultDto;
-import com.mycom.joytrip.tour.dto.TourSidoResponseDto;
 import com.mycom.joytrip.tour.service.TourService;
 import com.mycom.joytrip.user.dto.UserDto;
 
@@ -36,26 +35,28 @@ public class TourController {
 	@GetMapping("/tours")
 	public ResponseEntity<Object> tourList(TourParamDto tourParamDto, HttpSession session) {
 		System.out.println(tourParamDto);
-		TourResultDto tourResultDto;
+		TourResultDto tourResultDto = new TourResultDto();
 		
 		UserDto userDto = (UserDto) session.getAttribute("userDto");
 		
-		if (!tourParamDto.getSidoCode().isEmpty()) {
+		if (!tourParamDto.getSidoCode().isEmpty() ) {
+			TourResultDto result = new TourResultDto();
 			// 시도 + 구군으로 검색한 결과 조회
 			if (!tourParamDto.getCategory().isEmpty() && !tourParamDto.getOption().isEmpty()) {
 				// 카테고리 분류 + 정렬
-				TourResultDto result = tourService.searchTourByWordAndSidoByCategory(tourParamDto, userDto);
+				result = tourService.searchTourByWordAndSidoByCategory(tourParamDto, userDto);
 				return ResponseEntity.status(200).body(result);
 			} else if (!tourParamDto.getCategory().isEmpty()) {
-				TourResultDto result = tourService.searchTourByWordAndSidoByCategory(tourParamDto, userDto);
+				result = tourService.searchTourByWordAndSidoByCategory(tourParamDto, userDto);
 				return ResponseEntity.status(200).body(result);
 			} else {
-				TourResultDto result = tourService.searchTourbyWordAndSido(tourParamDto, userDto);
+				System.out.println("검색어 + 시군구");
+				result = tourService.searchTourbyWordAndSido(tourParamDto, userDto);
 				return ResponseEntity.status(200).body(result);
 			}
 		}
 		
-		if (!tourParamDto.getCategory().isEmpty() && tourParamDto.getRegion().isEmpty()) {
+		if (!tourParamDto.getCategory().isEmpty() && tourParamDto.getRegion().isEmpty() && tourParamDto.getSearchWord().isEmpty()) {
 			// 카테고리별 분류
 			tourResultDto = tourService.tourListByCategory(tourParamDto, userDto);
 			return ResponseEntity.status(200).body(tourResultDto);
@@ -70,7 +71,8 @@ public class TourController {
         if( tourParamDto.getSearchWord().isEmpty() ) {
         	tourResultDto = tourService.tourList(tourParamDto, userDto);
         }else {
-        	tourResultDto = tourService.searchTourbyWord(tourParamDto);
+        	System.out.println("그냥 검색어로만");
+        	tourResultDto = tourService.searchTourbyWord(tourParamDto, userDto);
         }
 		return ResponseEntity.status(200).body(tourResultDto);
 	}
@@ -83,7 +85,7 @@ public class TourController {
         if( tourParamDto.getSearchWord().isEmpty() ) {
         	tourResultDto = tourService.tourList(tourParamDto, userDto);
         }else {
-        	tourResultDto = tourService.searchTourbyWord(tourParamDto);
+        	tourResultDto = tourService.searchTourbyWord(tourParamDto, userDto);
         }
         System.out.println(tourResultDto);
 		return ResponseEntity.status(200).body(tourResultDto);
@@ -120,12 +122,15 @@ public class TourController {
 	public ResponseEntity<Object> mainTourList(HttpSession httpSession) {
 		UserDto userDto = (UserDto) httpSession.getAttribute("userDto");
 		List<TourResponseDto> mainTourRecommendList = new ArrayList<>();
+		TourResultDto tourResultDto = new TourResultDto();
 		if (userDto == null) {
 			mainTourRecommendList = tourService.mainTourListByScore(0);
+			tourResultDto.setList(mainTourRecommendList);
 		} else {
 			mainTourRecommendList = tourService.mainTourListByScore(userDto.getUserId());
+			tourResultDto.setList(mainTourRecommendList);
 		}
-		return ResponseEntity.status(200).body(mainTourRecommendList);
+		return ResponseEntity.status(200).body(tourResultDto);
 	}
 	
 	@GetMapping("/tours/sido")
