@@ -19,6 +19,8 @@
 		WHERE
 			a.first_image != '' and
 		    (a.title LIKE CONCAT('%', #{searchWord}, '%') or a.addr1 LIKE CONCAT('%', #{searchWord}, '%'))
+		ORDER BY
+			${option} ${how}
         LIMIT #{limit} OFFSET #{offset}
 	</select>
 	
@@ -112,11 +114,11 @@
 		    review r ON a.content_id = r.content_id
 				LEFT JOIN
 			attraction_description ad ON a.content_id = ad.content_id
+		WHERE 
+			a.content_id = #{contentId}
 		GROUP BY
 		    a.content_id, a.title, a.addr1, a.zipcode, a.first_image, a.first_image2,
 		    a.readcount, a.sido_code, a.gugun_code, a.latitude, a.longitude
-		HAVING
-			a.content_id = #{contentId};
 	</select>
 	
 	<select id="tourRelateList" parameterType="int" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
@@ -572,6 +574,126 @@
 		    a.gugun_code = #{gugunCode}
 		    	and
 		    a.content_type_id = #{category}
+    </select>
+    
+	<select id="searchTourByWordAndCategory" parameterType="map" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
+		SELECT 
+			content_id,
+		    title,
+		    addr1,
+		    zipcode,
+		    first_image,
+		    first_image2,
+		    readcount,
+		    sido_code,
+		    gugun_code,
+		    latitude,
+		    longitude
+		FROM
+		    attraction_info a
+		WHERE
+			a.first_image != '' and
+		    (a.title LIKE CONCAT('%', #{searchWord}, '%') or a.addr1 LIKE CONCAT('%', #{searchWord}, '%'))
+		    	and
+		    a.content_type_id = #{category}
+		ORDER BY
+			${option} ${how}
+        LIMIT #{limit} OFFSET #{offset}
+	</select>
+	
+	<select id="searchAgainTourByWord" parameterType="map" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
+		SELECT 
+			content_id,
+		    title,
+		    addr1,
+		    zipcode,
+		    first_image,
+		    first_image2,
+		    readcount,
+		    sido_code,
+		    gugun_code,
+		    latitude,
+		    longitude
+		FROM
+		    attraction_info a
+		WHERE
+			a.first_image != '' and
+		    (a.title LIKE CONCAT('%', #{searchWord}, '%') or a.addr1 LIKE CONCAT('%', #{searchWord}, '%'))
+		ORDER BY
+			${option} ${how}
+	</select>
+	
+	<select id="searchAgainTourByWordAndCategory" parameterType="map" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
+		SELECT 
+			content_id,
+		    title,
+		    addr1,
+		    zipcode,
+		    first_image,
+		    first_image2,
+		    readcount,
+		    sido_code,
+		    gugun_code,
+		    latitude,
+		    longitude
+		FROM
+		    attraction_info a
+		WHERE
+			a.first_image != '' and
+		    (a.title LIKE CONCAT('%', #{searchWord}, '%') or a.addr1 LIKE CONCAT('%', #{searchWord}, '%'))
+		    	and
+		    a.content_type_id = #{category}
+		ORDER BY
+			${option} ${how}
+	</select>
+	
+	<select id="searchAgainTourbyWordAndSido" parameterType="map" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
+		SELECT 
+		    a.content_id,
+		    a.title,
+		    a.addr1,
+		    a.zipcode,
+		    a.first_image,
+		    a.first_image2,
+		    a.readcount,
+		    a.sido_code,
+		    a.gugun_code,
+		    a.latitude,
+		    a.longitude,
+		    AVG(r.score) AS average_score, -- 평균 점수 계산
+		    a.content_type_id,
+		    COUNT(r.review_id) AS review_count
+		FROM
+		    attraction_info a 
+		LEFT JOIN 
+		    review r ON a.content_id = r.content_id
+		WHERE
+		    (a.title LIKE CONCAT('%', #{searchWord}, '%') or a.addr1 LIKE CONCAT('%', #{searchWord}, '%'))
+		    	and
+		    a.sido_code = #{sidoCode}
+		    	and
+		    a.gugun_code = #{gugunCode}
+		GROUP BY
+		    a.content_id, a.title, a.addr1, a.zipcode, a.first_image, a.first_image2,
+		    a.readcount, a.sido_code, a.gugun_code, a.latitude, a.longitude
+		ORDER BY
+			${option} ${how}
+	</select>
+
+	
+    <select id="countSearchAgainTourbyWordAndSido" parameterType="map" resultType="int">
+		SELECT 
+		    COUNT(*) AS result_count
+		FROM
+		    attraction_info a 
+		LEFT JOIN 
+		    review r ON a.content_id = r.content_id
+		WHERE
+		    (a.title LIKE CONCAT('%', #{searchWord}, '%') or a.addr1 LIKE CONCAT('%', #{searchWord}, '%'))
+		    	and
+		    a.sido_code = #{sidoCode}
+		    	and
+		    a.gugun_code = #{gugunCode}
     </select>
 </mapper>
 

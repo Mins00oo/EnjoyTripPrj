@@ -66,4 +66,14 @@ public interface TourDao {
 	List<TourResponseDto> searchTourByWordAndSidoByCategory(TourParamDto tourParamDto);
 	
 	int searchTourByWordAndSidoByCategoryCount(TourParamDto tourParamDto);
+	
+	List<TourResponseDto> searchTourByWordAndCategory(TourParamDto tourParamDto);
+	
+	List<TourResponseDto> searchAgainTourByWord(TourParamDto tourParamDto);
+
+	List<TourResponseDto> searchAgainTourByWordAndCategory(TourParamDto tourParamDto);
+	
+	List<TourResponseDto> searchAgainTourbyWordAndSido(TourParamDto tourParamDto);
+	
+	int countSearchAgainTourbyWordAndSido(TourParamDto tourParamDto);
 }
