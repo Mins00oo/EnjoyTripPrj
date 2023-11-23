@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,11 +29,16 @@ public class ReviewController {
 	
 	@PostMapping("/tours/reviews")
 	public ResponseEntity<Object> tourReviewRegist(@RequestBody ReviewRequestDto reviewRequestDto, HttpSession session) {
-//		UserDto userDto = (UserDto) session.getAttribute("userDto");
-//		reviewRequestDto.setUserId(userDto.getUserId());
-		System.out.println(reviewRequestDto);
+		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		reviewRequestDto.setUserId(userDto.getUserId());
 		reviewService.registReview(reviewRequestDto);
 		return ResponseEntity.status(200).body("후기 등록 완료되었습니다!");
+	}
+	
+	@PostMapping("/tours/reviews/update")
+	public ResponseEntity<Object> tourReviewUpdate(@RequestBody ReviewRequestDto reviewRequestDto) {
+		reviewService.updateReview(reviewRequestDto);
+		return ResponseEntity.status(200).body("후기 수정 완료되었습니다!");
 	}
 	
 	//본인이 쓴 리뷰만 보기
@@ -42,8 +48,6 @@ public class ReviewController {
 		List<ReviewResponseDto> list = reviewService.retrieveMyReviewList(1);
 		return ResponseEntity.status(200).body(list);
 	}
-	
-	//해당 관광지에 대한 리뷰 보기???
 	
 	@DeleteMapping("/tours/reviews/{reviewId}")
 	public ResponseEntity<Object> deleteTourReview(@PathVariable int reviewId) {

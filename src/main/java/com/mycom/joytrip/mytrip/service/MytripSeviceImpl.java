@@ -24,8 +24,8 @@ public class MytripSeviceImpl implements MytripService{
 	}
 
 	@Override
-	public List<MytripResponseDto> mytripDetail(int mytripId) {
-		return dao.mytripDetail(mytripId);
+	public List<MytripResponseDto> mytripDetail(MytripRequestDto dto) {
+		return dao.mytripDetail(dto);
 	}
 
 	@Override

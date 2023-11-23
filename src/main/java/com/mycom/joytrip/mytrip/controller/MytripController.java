@@ -32,12 +32,18 @@ public class MytripController {
 	}
 	
 	@GetMapping(value="/mytrips/{mytripId}")
-	List<MytripResponseDto> mytripDetail(@PathVariable int mytripId){ 
-		return service.mytripDetail(mytripId);
+	List<MytripResponseDto> mytripDetail(@PathVariable int mytripId, HttpSession session){ 
+		MytripRequestDto dto = new MytripRequestDto();
+		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		dto.setUserId(userDto.getUserId());
+		dto.setMytripId(mytripId);
+		return service.mytripDetail(dto);
 	}
 	
 	@PostMapping(value="/mytrips")
-	int insert(@RequestBody MytripRequestDto dto) {
+	int insert(@RequestBody MytripRequestDto dto, HttpSession session) {
+		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		dto.setUserId(userDto.getUserId());
 		return service.insert(dto);
 	}
 	
