@@ -10,7 +10,7 @@ import com.mycom.joytrip.tour.dto.TourResultDto;
 import com.mycom.joytrip.user.dto.UserDto;
 
 public interface TourService {
-	TourResultDto searchTourbyWord(TourParamDto tourParamDto);
+	TourResultDto searchTourbyWord(TourParamDto tourParamDto, UserDto userDto);
 	
 	List<TourResponseDto> searchTourbyWordAndOrder(String searchWord, String order);
 	

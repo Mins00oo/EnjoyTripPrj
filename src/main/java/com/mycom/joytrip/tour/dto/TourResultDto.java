@@ -22,5 +22,4 @@ public class TourResultDto {
 	
 	private List<TourGugunResponseDto> gugunList;
 	
-	private boolean isLogin;
 }

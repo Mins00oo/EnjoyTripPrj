@@ -33,4 +33,6 @@ public class TourParamDto {
 	private String sidoCode;
 	
 	private String gugunCode;
+	
+	private String againSearchWord;
 }
