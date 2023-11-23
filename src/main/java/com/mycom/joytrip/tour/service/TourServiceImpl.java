@@ -3,6 +3,7 @@ package com.mycom.joytrip.tour.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpSession;
 
@@ -47,6 +48,7 @@ public class TourServiceImpl implements TourService {
 		}
 		
 		if (!tourParamDto.getAgainSearchWord().isEmpty()) {
+			System.out.println("여기가 그냥 검색어임");
 			if (tourParamDto.getCategory().isEmpty()) {
 				list = tourDao.searchAgainTourByWord(tourParamDto);
 			} else {
@@ -57,11 +59,14 @@ public class TourServiceImpl implements TourService {
 			List<TourResponseDto> againSearchList = list.stream()
 					.filter(TourResponseDto -> TourResponseDto.getAddr1().contains(tourParamDto.getAgainSearchWord())
 							|| TourResponseDto.getTitle().contains(tourParamDto.getAgainSearchWord()))
-					.skip(tourParamDto.getOffset())
-					.limit(9)
 					.collect(Collectors.toList());
-			tourResultDto.setList(againSearchList);
-			tourResultDto.setCount(list.size());
+			
+			List<TourResponseDto> result = againSearchList.stream()
+							.skip(tourParamDto.getOffset())
+							.limit(9)
+							.collect(Collectors.toList());
+			tourResultDto.setList(result);
+			tourResultDto.setCount(againSearchList.size());
 
 			for (TourResponseDto tourResponseDto : againSearchList) {
 				int reviewCount = reviewDao.tourReviewCount(tourResponseDto.getContentId());
@@ -322,17 +327,19 @@ public class TourServiceImpl implements TourService {
 		list = tourDao.searchTourbyWordAndSido(tourParamDto);
 
 		if (!tourParamDto.getAgainSearchWord().isEmpty()) {
-
 			list = tourDao.searchAgainTourbyWordAndSido(tourParamDto);
 
 			List<TourResponseDto> againSearchList = list.stream()
 					.filter(tourResponseDto -> tourResponseDto.getAddr1().contains(tourParamDto.getAgainSearchWord())
 							|| tourResponseDto.getTitle().contains(tourParamDto.getAgainSearchWord()))
-					.skip(tourParamDto.getOffset())
-					.limit(9)
 					.collect(Collectors.toList());
-			tourResultDto.setList(againSearchList);
-			tourResultDto.setCount(list.size());
+			int count = againSearchList.size();
+			List<TourResponseDto> result = againSearchList.stream()
+							.skip(tourParamDto.getOffset())
+							.limit(9)
+							.collect(Collectors.toList());
+			tourResultDto.setList(result);
+			tourResultDto.setCount(count);
 
 			for (TourResponseDto tourResponseDto : againSearchList) {
 				int reviewCount = reviewDao.tourReviewCount(tourResponseDto.getContentId());
