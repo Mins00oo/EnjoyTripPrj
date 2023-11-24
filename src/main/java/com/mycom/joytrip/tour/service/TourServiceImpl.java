@@ -79,7 +79,7 @@ public class TourServiceImpl implements TourService {
 					} else {
 						tourResponseDto.setFavorite(true);
 					}
-
+					
 				}
 			}
 			return tourResultDto;
@@ -88,6 +88,16 @@ public class TourServiceImpl implements TourService {
 		for (TourResponseDto tourResponseDto : list) {
 			int reviewCount = reviewDao.tourReviewCount(tourResponseDto.getContentId());
 			tourResponseDto.setReviewCount(reviewCount);
+			if (userDto == null) {
+				tourResponseDto.setFavorite(false);
+			} else {
+				if (stardDao.retriveMyStar(userDto.getUserId(), tourResponseDto.getContentId()) == null) {
+					tourResponseDto.setFavorite(false);
+				} else {
+					tourResponseDto.setFavorite(true);
+				}
+				
+			}
 		}
 
 		int count = tourDao.tourListSearchWordTotalCount(tourParamDto);
