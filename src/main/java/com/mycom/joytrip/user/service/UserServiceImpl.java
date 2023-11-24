@@ -35,7 +35,10 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public UserDto userLogin(UserDto userDto) {
 		UserDto user = userDao.userLogin(userDto.getUserEmail());
+		System.out.println(user);
+		System.out.println(userDto.getUserPassword() + user.getUserPassword());
 		if (user != null && BCrypt.checkpw(userDto.getUserPassword(), user.getUserPassword())) {
+			System.out.println("여기안옴>?");
 			user.setUserPassword(null);
 			return user;
 		}

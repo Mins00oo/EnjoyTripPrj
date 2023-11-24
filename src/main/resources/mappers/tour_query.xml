@@ -3,21 +3,29 @@
 <mapper namespace="com.mycom.joytrip.tour.dao.TourDao">
 	<select id="searchTourbyWord" parameterType="map" resultType="com.mycom.joytrip.tour.dto.TourResponseDto">
 		SELECT 
-			content_id,
-		    title,
-		    addr1,
-		    zipcode,
-		    first_image,
-		    first_image2,
-		    readcount,
-		    sido_code,
-		    gugun_code,
-		    latitude,
-		    longitude
+		    a.content_id,
+		    a.title,
+		    a.addr1,
+		    a.zipcode,
+		    a.first_image,
+		    a.first_image2,
+		    a.readcount,
+		    a.sido_code,
+		    a.gugun_code,
+		    a.latitude,
+		    a.longitude,
+		    AVG(r.score) AS average_score, -- 평균 점수 계산
+		    a.content_type_id,
+		    COUNT(r.review_id) AS review_count
 		FROM
-		    attraction_info a
+		    attraction_info a 
+		LEFT JOIN 
+		    review r ON a.content_id = r.content_id
 		WHERE
 		    (a.title LIKE CONCAT('%', #{searchWord}, '%') or a.addr1 LIKE CONCAT('%', #{searchWord}, '%'))
+		GROUP BY
+		    a.content_id, a.title, a.addr1, a.zipcode, a.first_image, a.first_image2,
+		    a.readcount, a.sido_code, a.gugun_code, a.latitude, a.longitude
 		ORDER BY
 			${option} ${how}
         LIMIT #{limit} OFFSET #{offset}
