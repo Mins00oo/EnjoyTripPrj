@@ -6,13 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.mycom.joytrip.board.dto.BoardParamDto;
 import com.mycom.joytrip.board.dto.BoardRequestDto;
@@ -31,8 +25,10 @@ public class BoardController {
 		BoardResultDto boardResultDto;
 		
         if( boardParamDto.getSearchWord().isEmpty() ) {
+			System.out.println("검색어 x");
         	boardResultDto = boardService.boardList(boardParamDto);
         }else {
+			System.out.println("검색어 o");
         	boardResultDto = boardService.boardListSearchWord(boardParamDto);
         }
 		return boardResultDto;

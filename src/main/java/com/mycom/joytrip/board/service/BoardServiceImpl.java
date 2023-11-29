@@ -28,7 +28,6 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public BoardResultDto boardList(BoardParamDto boardParamDto) {
 		BoardResultDto boardResultDto = new BoardResultDto();
-
 		try {
 			List<BoardResponseDto> list = boardDao.boardList(boardParamDto);
 			int count = boardDao.boardListTotalCount();

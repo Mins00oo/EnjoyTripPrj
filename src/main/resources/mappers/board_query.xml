@@ -12,7 +12,7 @@
 	<select id="boardList" resultType="com.mycom.joytrip.board.dto.BoardResponseDto">
         SELECT b.BOARD_ID, b.user_id, u.USER_NAME, u.USER_NICKNAME,
                  b.BOARD_TITLE, b.BOARD_CONTENT, b.board_date
-          FROM BOARD b, user u
+          FROM board b, user u
          WHERE b.user_id = u.user_id
          ORDER BY b.BOARD_ID DESC
          LIMIT #{limit} OFFSET #{offset}
@@ -36,33 +36,29 @@
 		delete from board 
 		 where board_id = #{boardId}
 	</delete>
-	
-	<insert id="boardFileInsert" parameterType="com.mycom.joytrip.board.dto.BoardFileDto">
-	    INSERT INTO BOARD_FILE ( BOARD_ID, FILE_NAME, FILE_SIZE, FILE_CONTENT_TYPE, FILE_URL )
-	                VALUES ( #{boardId}, #{fileName}, #{fileSize}, #{fileContentType}, #{fileUrl} )
-	</insert>
+
 	
     <select id="boardListSearchWord" parameterType="map" resultType="com.mycom.joytrip.board.dto.BoardResponseDto">
-        SELECT b.BOARD_ID, b.user_id, u.USER_NAME, u.USER_NICKNAME,
-                 b.BOARD_TITLE, b.BOARD_CONTENT, b.board_date
-          FROM BOARD b, user u
+        SELECT b.board_id, b.user_id, u.USER_NAME, u.USER_NICKNAME,
+                 b.board_title, b.board_content, b.board_date
+          FROM board b, user u
           WHERE b.user_id = u.user_id
             AND b.board_title LIKE CONCAT('%', #{searchWord} ,'%')
-          ORDER BY b.BOARD_ID DESC
+          ORDER BY b.board_id DESC
           LIMIT #{limit} OFFSET #{offset}
     </select>
     
     <select id="boardListTotalCount" resultType="int">
-        SELECT COUNT(*) FROM BOARD
+        SELECT COUNT(*) FROM board
     </select>
     
     <select id="boardListSearchWordTotalCount" parameterType="string" resultType="int">
         SELECT COUNT(*)
-          FROM BOARD
+          FROM board
          WHERE board_title LIKE CONCAT('%', #{searchWord} ,'%')
     </select>
     
     <select id="myBoardCount" parameterType="int" resultType="int">
-        SELECT COUNT(*) FROM BOARD WHERE user_id = #{userId}
+        SELECT COUNT(*) FROM board WHERE user_id = #{userId}
     </select>
 </mapper>

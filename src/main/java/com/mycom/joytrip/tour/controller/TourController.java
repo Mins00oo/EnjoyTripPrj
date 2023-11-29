@@ -7,10 +7,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.mycom.joytrip.review.dto.CheckResponseDto;
 import com.mycom.joytrip.tour.dto.TourDetailResponseDto;
@@ -38,7 +35,7 @@ public class TourController {
 		TourResultDto tourResultDto = new TourResultDto();
 		
 		UserDto userDto = (UserDto) session.getAttribute("userDto");
-		
+		System.out.println("userDto = " + userDto);
 		if (!tourParamDto.getSidoCode().isEmpty() ) {
 			TourResultDto result = new TourResultDto();
 			// 시도 + 구군으로 검색한 결과 조회
