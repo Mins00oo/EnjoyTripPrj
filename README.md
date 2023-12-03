@@ -12,6 +12,9 @@
 ## ✨ ERD
 ![image](https://github.com/Mins00oo/front_enjoytrip/assets/109537583/774759cf-63f2-489f-9877-6a992d450fd6)
 
+## 🌙 서비스 시연 영상
+[![Avocado 시연 영상](https://img.youtube.com/vi/D7-gF9oSkxk/sddefault.jpg)](https://youtu.be/D7-gF9oSkxk)
+
 ## ✔ 사용 기술
 ### Frontend
 - ```JavaScript```
